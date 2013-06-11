@@ -4,6 +4,8 @@ import (
 	"flag"
 	"log"
 	"net/http"
+	"time"
+	"fmt"
 )
 
 var (
@@ -28,8 +30,10 @@ func main() {
 
 	log.Println("fn=start")
 	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets"))))
-	http.HandleFunc("/", serveExample) // index
 	http.HandleFunc("/tracker.gif", serveTracker)
+	http.HandleFunc("/", serveExample)
+	http.HandleFunc("/dashboard", serveDashboard)
+	http.HandleFunc("/events", serveEvents)
 
 	err := http.ListenAndServe(":"+*port, nil)
 	log.Fatalf("fn=listen_and_serve error=%q", err)
@@ -49,4 +53,29 @@ func serveTracker(w http.ResponseWriter, r *http.Request) {
 
 func serveExample(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "assets/example.html")
+}
+
+// dashboard
+
+func serveDashboard(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "assets/dashboard.html")
+}
+
+// events
+
+func serveEvents(w http.ResponseWriter, r *http.Request) {
+	f, _ := w.(http.Flusher)
+
+	w.Header().Set("Content-Type", "text/event-stream")
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Connection", "keep-alive")
+
+	var event string
+	event += "event: %s\n\n"
+	event += "data: %d\n\n"
+
+	for _ = range time.Tick(500 * time.Millisecond) {
+		fmt.Fprintf(w, event, "request", 1)
+		f.Flush()
+	}
 }
