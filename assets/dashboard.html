@@ -1,0 +1,160 @@
+<!doctype html>
+<title>TS1 Dashboard</title>
+<style type="text/css">
+* {
+	padding: 0;
+	margin: 0;
+}
+
+body {
+	background: #eee;
+	color: #333;
+	font: 14px/1.5em "Helvetica Neue", Helvetica, Arial, sans-serif;
+	padding: 20px;
+}
+
+hr {
+	margin: 40px 0;
+}
+
+.callout {
+	color: #666;
+	border: 1px solid #ccc;
+	display: inline-block;
+	background: #fff;
+	padding: 5px 10px;
+}
+
+.callout .value {
+	font-size: 40px;
+	line-height: 40px;
+	font-weight: bold;
+	text-align: right;
+}
+
+#resolution dt, dd {
+	display: inline-block;
+}
+
+#resolution dt {
+	font-weight: bold;
+	margin-right: 5px;
+}
+
+#resolution dd {
+	clear: right;
+}
+
+#page-views li {
+	list-style: none;
+	margin-bottom: 10px;
+}
+
+#page-views .value {
+	font-weight: bold;
+	font-size: 40px;
+	line-height: 40px;
+	float: left;
+}
+
+#page-views .title,
+#page-views .url {
+	margin-left: 50px;
+}
+</style>
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+	var sse = new EventSource("/events")
+	sse.addEventListener("error", function(){
+		console.log("[ts1] debug: sse error")
+		sse.close()
+	})
+
+	sse.addEventListener("message", function(m){
+		var data = JSON.parse(m.data)
+		updateValue("#requests", data.Request)
+		updateValue("#retina", data.Retina)
+		drawResolution(data.Resolution)
+		drawPageViews(data.PageViews)
+		
+	})
+
+	function updateValue(id, value) {
+		var el = document.querySelector(id + " .value")
+		if(value != el.innerText) {
+			el.innerText = value 
+		}
+	}
+
+	function drawResolution(data) {
+		var el = document.querySelector("#resolution dl")
+		el.innerHTML = ""
+
+		for(var resolution in data) {
+			var dt = document.createElement("dt"),
+			    dd = document.createElement("dd")
+
+			dt.innerText = resolution
+			dd.innerText = data[resolution]
+
+			el.appendChild(dt)
+			el.appendChild(dd)
+		}
+	}
+
+	function drawPageViews(data) {
+		var ul  = document.querySelector("#page-views ul")
+
+		for(var i=0; i < data.length; i++) {
+			var d  = data[i],
+			    q  = "li[data-url='"+ d.URL +"'] .value",
+			    el = ul.querySelector(q)
+
+			if(el) {
+				el.innerText = d.Count
+			} else {
+				var li    = document.createElement("li"),
+				    title = document.createElement("p"),
+				    url   = document.createElement("p"),
+				    value = document.createElement("p")
+
+				title.className = "title"
+				title.innerText = d.Title
+
+				url.className = "url"
+				url.innerText = d.URL
+
+				value.className = "value"
+				value.innerText = d.Count
+
+				li.setAttribute("data-url", d.URL)
+				li.appendChild(value)
+				li.appendChild(title)
+				li.appendChild(url)
+				ul.appendChild(li)
+			}
+		}
+	}
+})
+</script>
+<div id="requests" class="callout">
+	<p>Requests</p>
+	<p class="value">0</p>
+</div>
+
+<div id="retina" class="callout">
+	<p>Retina Displays</p>
+	<p class="value">0</p>
+</div>
+
+<hr>
+
+<div id="resolution">
+	<dl></dl>
+</div>
+
+<hr>
+
+<div id="page-views">
+	<ul></ul>
+</div>
