@@ -12,9 +12,12 @@ var (
 		"r",  // resolution 	`screen.width x screen.height`
 		"w",  // browser width	`screen.availWidth`
 		"h",  // browser height	`screen.availHeight`
-		"d",  // display colors	`screen.pixelDepth || screen.colorDepth`
-		"pr", // display retina	`window.devicePixelRatio > 1`
+		"c",  // display colors	`screen.pixelDepth || screen.colorDepth`
+		"p",  // display retina	`window.devicePixelRatio > 1`
 		"a",  // browser agent	`navigator.userAgent`
+		"t",  // page title     `document.title`
+		"u",  // page uri	`window.location.pathname`
+		"rf", // referrer	`document.referrer`
 	}
 )
 
@@ -36,6 +39,7 @@ func serveTracker(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "image/gif")
 	w.Header().Set("Content-Length", "0")
 
+	println("---")
 	for _, p := range params {
 		println(p + ": " + r.FormValue(p))
 	}
