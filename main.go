@@ -1,14 +1,29 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
-	"fmt"
 )
 
+type View struct {
+	Title string
+	URL   string
+	Count int
+}
+
+type DB struct {
+	Request    int
+	Retina     int
+	Resolution map[string]int
+	PageViews  []*View
+}
+
 var (
+	db     = &DB{Resolution: make(map[string]int), PageViews: []*View{}}
 	port   = flag.String("p", "5000", "Web server port")
 	params = []string{
 		"r",  // resolution 	`screen.width x screen.height`
@@ -43,10 +58,30 @@ func serveTracker(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "image/gif")
 	w.Header().Set("Content-Length", "0")
 
-	println("---")
 	for _, p := range params {
-		println(p + ": " + r.FormValue(p))
+		value := r.FormValue(p)
+		switch p {
+		case "r":
+			db.Resolution[value]++
+		case "p":
+			db.Retina++
+		}
 	}
+
+	db.Request++
+
+	title := r.FormValue("t")
+	uri := r.FormValue("u")
+
+	for _, view := range db.PageViews {
+		if view.URL == uri {
+			view.Count++
+			return
+		}
+	}
+
+	db.PageViews = append(db.PageViews, &View{
+		URL: uri, Title: title, Count: 1})
 }
 
 // example
@@ -72,10 +107,11 @@ func serveEvents(w http.ResponseWriter, r *http.Request) {
 
 	var event string
 	event += "event: %s\n\n"
-	event += "data: %d\n\n"
+	event += "data: %s\n\n"
 
 	for _ = range time.Tick(500 * time.Millisecond) {
-		fmt.Fprintf(w, event, "request", 1)
+		payload, _ := json.Marshal(&db)
+		fmt.Fprintf(w, event, "message", payload)
 		f.Flush()
 	}
 }
