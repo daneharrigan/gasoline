@@ -31,7 +31,7 @@ _ts1 = _ts1 || [];
 			"&a=" + escape(userAgent) +
 			"&t=" + escape(pageTitle) +
 			"&u=" + escape(pathName) +
-			"rf=" + escape(referrer)
+			"&rf=" + escape(referrer)
 
 		console.log("[ts1] debug: params " + params)
 		return params
