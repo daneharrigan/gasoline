@@ -23,6 +23,7 @@ _ts1 = _ts1 || [];
 		    referrer     = document.referrer
 
 		var params = "" +
+			"&ac=" + acc +
 			"&r=" + resolution +
 			"&w=" + screenWidth +
 			"&h=" + screenHeight +
