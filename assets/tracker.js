@@ -41,7 +41,7 @@ _ts1 = _ts1 || [];
 
 	function Revisit() {
 		var value = GetCookie("_ts1_revisit")
-		SetCookie("_ts1_revisit", 1, 60 * 60 * 24 * 356) // should i always set you
+		SetCookie("_ts1_revisit", 1, 0) //, 60 * 60 * 24 * 356) // should i always set you
 		return !!value
 	}
 
