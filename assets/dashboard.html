@@ -15,6 +15,8 @@ body {
 
 hr {
 	margin: 40px 0;
+	border: none;
+	border-top: 1px solid #ccc;
 }
 
 .callout {
@@ -71,6 +73,7 @@ document.addEventListener("DOMContentLoaded", function(){
 		var data = JSON.parse(m.data)
 		updateValue("#requests", data.Request)
 		updateValue("#retina", data.Retina)
+		updateValue("#unique", data.Unique)
 		drawResolution(data.Resolution)
 		drawPageViews(data.PageViews)
 		
@@ -139,6 +142,11 @@ document.addEventListener("DOMContentLoaded", function(){
 	<p class="value">0</p>
 </div>
 
+<div id="unique" class="callout">
+	<p>Unique Viewers</p>
+	<p class="value">0</p>
+</div>
+
 <div id="retina" class="callout">
 	<p>Retina Displays</p>
 	<p class="value">0</p>
@@ -147,6 +155,7 @@ document.addEventListener("DOMContentLoaded", function(){
 <hr>
 
 <div id="resolution">
+	<p>Viewed with Resolution</p>
 	<dl></dl>
 </div>
 
