@@ -32,10 +32,47 @@ _ts1 = _ts1 || [];
 			"&a=" + escape(userAgent) +
 			"&t=" + escape(pageTitle) +
 			"&u=" + escape(pathName) +
-			"&rf=" + escape(referrer)
+			"&rf=" + escape(referrer) +
+			"&rv=" + Revisit()
 
 		console.log("[ts1] debug: params " + params)
 		return params
+	}
+
+	function Revisit() {
+		var value = GetCookie("_ts1_revisit")
+		SetCookie("_ts1_revisit", 1, 60 * 60 * 24 * 356) // should i always set you
+		return !!value
+	}
+
+	function SetCookie(name, value, lifeSpan) {
+		var cookie = name + "=" + escape(value)
+
+		if(lifeSpan > 0) {
+			var timestamp = new Date()
+			timestamp.setTime(timestamp.getTime() + (lifeSpan * 1000))
+			cookie += "; expires=" + timestamp.toGMTString()
+		}
+
+		cookie += "; path=/"
+		document.cookie = cookie
+	}
+
+	function GetCookie(name) {
+		name += "="
+		var cookies = document.cookie.split(";")
+		for(var i=0; i < cookies.length; i++) {
+			var cookie = cookies[i]
+			if(cookie[0] == " ") {
+				cookie = cookie.substring(1, cookie.length)
+			}
+
+			if(cookie.indexOf(name) == 0) {
+				return unescape(cookie.substring(name.length, cookie.length))
+			}
+		}
+
+		return
 	}
 
 	function Push(args) {
