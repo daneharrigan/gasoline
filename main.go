@@ -17,6 +17,7 @@ type View struct {
 
 type DB struct {
 	Request    int
+	Unique     int
 	Retina     int
 	Resolution map[string]int
 	PageViews  []*View
@@ -35,6 +36,7 @@ var (
 		"t",  // page title     `document.title`
 		"u",  // page uri	`window.location.pathname`
 		"rf", // referrer	`document.referrer`
+		"rv", // revisit	`document.cookie.split(";")`
 	}
 )
 
@@ -64,7 +66,13 @@ func serveTracker(w http.ResponseWriter, r *http.Request) {
 		case "r":
 			db.Resolution[value]++
 		case "p":
-			db.Retina++
+			if value != "1" {
+				db.Retina++
+			}
+		case "rv":
+			if value == "false" {
+				db.Unique++
+			}
 		}
 	}
 
