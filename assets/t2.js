@@ -62,45 +62,48 @@ var _ts1 = _ts1 || [];
   }
 
   function lifespan() {
-    return (new Date).getTime() - _ts1.start
+    return timestamp() - _ts1.start
+  }
+
+  function timestamp() {
+    return (new Date).getTime()
   }
 
   function track(raw, escaped) {
     var params = "?"
     for(var key in raw) {
-      debug(key + "=" + raw[key])
-      params += "&" + key + "=" + escape(raw[key])
+      debug(key + "=" + raw[key]())
+      params += "&" + key + "=" + escape(raw[key]())
     }
 
     if(escaped) {
-      params += escaped
+      params += escaped()
     }
 
     debug(params)
-    _ts1.start = (new Date).getTime()
+    _ts1.start = timestamp()
     image.src = "/tracker.gif" + params
   }
 
-  function push(value) {
+  track({
+    resolution: resolution,
+    dimension: dimension,
+    retina: retina,
+    color: color,
+    agent: agent,
+    os: os,
+    cookie: cookie,
+    referrer: referrer,
+    title: title,
+    url: url
+  }, plugins)
+
+  _ts1.push = function(value) {
     debug("push")
     switch(value[0]) {
-    case "account": accoutId = args[1]; break
-    case "track": track({ title: title(), url: url(), lifespan: lifespan() })
+    case "account": accoutId = value[1]; break
+    case "track": track({ title: title, url: url, lifespan: lifespan }, 0)
     }
   }
 
-  track({
-    resolution: resolution(),
-    dimension: dimension(),
-    retina: retina(),
-    color: color(),
-    agent: agent(),
-    os: os(),
-    cookie: cookie(),
-    referrer: referrer(),
-    title: title(),
-    url: url()
-  }, plugins())
-
-  _ts1.push = push
 })()
