@@ -122,6 +122,14 @@ p {
 	write("returning viewer", value)
 	appendParam("returning", value)
 
+  /*
+  set start time
+  on track
+    - send end-start with page title and page url if start is set
+    - set start time
+  onunload send end-start with page title and page url
+  */
+
 	write("params", params)
 	/*******************/
 </script>
