@@ -1,1 +1,1 @@
-web: bin/ts1 -p $PORT
+web: bin/gasoline -p $PORT
