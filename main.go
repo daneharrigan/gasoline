@@ -75,6 +75,8 @@ func serveDashboard(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Length", "0")
 		w.Header().Set("Allow", "OPTIONS, GET")
 	case "GET":
+		w.Header().Set("Content-Type", "text/plain")
+
 		id := r.FormValue("i")
 		rec := db.Get(id)
 
