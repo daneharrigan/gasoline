@@ -1,11 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"flag"
+	"fmt"
+	"gasoline/db"
 	"log"
 	"net/http"
-	"gasoline/db"
 )
 
 var (
@@ -81,8 +81,8 @@ func serveDashboard(w http.ResponseWriter, r *http.Request) {
 		rec := db.Get(id)
 
 		fmt.Fprintf("%s: %d\n", "PageView", rec.PageView)
-		fmt.Fprintf("%s: %d\n", Visit", rec.Visit)
-		fmt.Fprintf("%s: %d\n", Visitor", rec.Visitor)
-		fmt.Fprintf("%s: %d\n", ReturnVisitor", rec.ReturnVisitor)
+		fmt.Fprintf("%s: %d\n", "Visit", rec.Visit)
+		fmt.Fprintf("%s: %d\n", "Visitor", rec.Visitor)
+		fmt.Fprintf("%s: %d\n", "ReturnVisitor", rec.ReturnVisitor)
 	}
 }
