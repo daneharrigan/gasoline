@@ -64,13 +64,13 @@ _gasoline = _gasoline || [];
 	}
 
 	function track() {
-		var payload = "?",
+		var payload = "?"
 		var params = {
 			i: accoutId,
 			u: uniqueVisitor,
 			pv: pageView,
 			v: visit,
-			vr, visitor,
+			vr: visitor,
 			rv: returnVisitor
 		}
 
