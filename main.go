@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"flag"
 	"log"
 	"net/http"
@@ -18,6 +19,7 @@ func main() {
 	flag.Parse()
 
 	http.HandleFunc("/tracker", serveTracker)
+	http.HandleFunc("/dashboard", serveDashboard)
 	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets"))))
 
 	log.Println("fn=ListenAndServe")
@@ -27,32 +29,58 @@ func main() {
 }
 
 func serveTracker(w http.ResponseWriter, r *http.Request) {
-	id := r.FormValue("i")
-	if id == "" {
-		http.Error(w, "Forbidden", 403)
-		return
-	}
-
-	rec := db.Get(id)
-	if rec == nil {
-		rec = db.New(id)
-	}
-
-	for _, k := range params {
-		v := r.FormValue(k)
-		if v == "" {
-			continue
+	switch r.Method {
+	default:
+		http.Error(w, "Method Not Allowed", 405)
+	case "OPTIONS":
+		w.Header().Set("Content-Length", "0")
+		w.Header().Set("Allow", "OPTIONS, GET")
+	case "GET":
+		id := r.FormValue("i")
+		if id == "" {
+			http.Error(w, "Forbidden", 403)
+			return
 		}
 
-		switch k {
-		case "pv": // page view
-			rec.Pageview++
-		case "vr": // visitor
-			rec.Visitor++
-		case "v": // visit
-			rec.Visit++
-		case "r": // return visitor
-			rec.ReturnVisitor++
+		rec := db.Get(id)
+		if rec == nil {
+			rec = db.New(id)
 		}
+
+		for _, k := range params {
+			v := r.FormValue(k)
+			if v == "" {
+				continue
+			}
+
+			switch k {
+			case "pv": // page view
+				rec.PageView++
+			case "vr": // visitor
+				rec.Visitor++
+			case "v": // visit
+				rec.Visit++
+			case "r": // return visitor
+				rec.ReturnVisitor++
+			}
+		}
+	}
+}
+
+func serveDashboard(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	default:
+		http.Error(w, "Method Not Allowed", 405)
+	case "OPTIONS":
+		w.Header().Set("Content-Length", "0")
+		w.Header().Set("Allow", "OPTIONS, GET")
+	case "GET":
+		id := r.FormValue("i")
+		rec := db.Get(id)
+
+		fmt.Fprintf("%s: %d\n", "PageView", rec.PageView)
+		fmt.Fprintf("%s: %d\n", Visit", rec.Visit)
+		fmt.Fprintf("%s: %d\n", Visitor", rec.Visitor)
+		fmt.Fprintf("%s: %d\n", ReturnVisitor", rec.ReturnVisitor)
 	}
 }

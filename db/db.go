@@ -9,7 +9,7 @@ var (
 
 type Record struct {
 	//Hit int64
-	Pageview      int64
+	PageView      int64
 	Visit         int64
 	Visitor       int64
 	ReturnVisitor int64
