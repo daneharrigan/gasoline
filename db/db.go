@@ -1,6 +1,9 @@
 package db
 
-import "sync"
+import (
+	"github.com/bmizerany/perks/topk"
+	"sync"
+)
 
 var (
 	r map[string]*Record
@@ -13,6 +16,7 @@ type Record struct {
 	Visit         int64
 	UniqueVisitor int64
 	ReturnVisitor int64
+	TopK          *topk.Stream
 }
 
 func init() {
@@ -23,7 +27,7 @@ func New(id string) *Record {
 	l.Lock()
 	defer l.Unlock()
 
-	r[id] = new(Record)
+	r[id] = &Record{TopK: topk.New(10)}
 	return r[id]
 }
 

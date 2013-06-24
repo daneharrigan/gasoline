@@ -10,7 +10,7 @@ import (
 
 var (
 	port   = flag.String("p", "5000", "Web service port")
-	params = []string{"i", "u", "p", "v", "r"}
+	params = []string{"i", "u", "p", "v", "r", "l"}
 )
 
 func main() {
@@ -67,6 +67,8 @@ func serveTracker(w http.ResponseWriter, r *http.Request) {
 				rec.Visit++
 			case "r": // return visitor
 				rec.ReturnVisitor++
+			case "l":
+				rec.TopK.Insert(v)
 			}
 		}
 	}

@@ -77,14 +77,15 @@ _gasoline = _gasoline || [];
 			u: uniqueVisitor,
 			p: pageView,
 			v: visit,
-			r: returnVisitor
+			r: returnVisitor,
+			l: escape(w.location.pathname)
 		}
 
 		for(var k in params) {
 			var v = params[k]
 			if(typeof v == "function") {
 				if(v()) {
-					payload += "&" + k + "=1" 
+					payload += "&" + k + "=1"
 				}
 			} else {
 				payload += "&" + k + "=" + v
