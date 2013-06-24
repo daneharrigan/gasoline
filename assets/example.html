@@ -1,27 +1,19 @@
 <!doctype html>
 <title>example page</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<ul>
-	<li><a href="/foo">link #1</a></li>
-	<li><a href="/foo/bar">link #2</a></li>
-	<li><a href="/baz/cux">link #3</a></li>
-	<li><a href="/qux/1/sample-link">link #4</a></li>
-	<li><a href="/path/to/page">link #5</a></li>
-</ul>
-
 <script>
-var _ts1 = _ts1 || [];
+var _gasoline = _gasoline || [];
+
+_gasoline.push(["account", "ebe7b2084a8d0cb0"]);
+_gasoline.push(["track"]);
 
 (function() {
 	var s = document.createElement("script");
 	s.type = "text/javascript";
 	s.async = true;
 	//s.src = ("https:" == document.location.protocol ? "https://ssl" : "http://www") + ".google-analytics.com/ga.js";
-	s.src = "/assets/tracker.js"
+	s.src = "/assets/track.js"
 	var s1 = document.getElementsByTagName("script")[0];
 	s1.parentNode.insertBefore(s, s1);
-
-	_ts1.push(["account", "ebe7b2084a8d0cb0"]);
-	_ts1.push(["track"]);
 })();
 </script>
