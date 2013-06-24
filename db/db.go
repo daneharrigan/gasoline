@@ -11,7 +11,7 @@ type Record struct {
 	//Hit int64
 	PageView      int64
 	Visit         int64
-	Visitor       int64
+	UniqueVisitor int64
 	ReturnVisitor int64
 }
 

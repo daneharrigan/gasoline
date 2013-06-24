@@ -10,7 +10,7 @@ import (
 
 var (
 	port   = flag.String("p", "5000", "Web service port")
-	params = []string{"i", "u", "pv", "v", "vr", "rv"}
+	params = []string{"i", "u", "p", "v", "r"}
 )
 
 func main() {
@@ -36,6 +36,9 @@ func serveTracker(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Length", "0")
 		w.Header().Set("Allow", "OPTIONS, GET")
 	case "GET":
+		w.Header().Set("Content-Length", "0")
+		w.Header().Set("Content-Type", "image/gif")
+
 		id := r.FormValue("i")
 		if id == "" {
 			http.Error(w, "Forbidden", 403)
@@ -47,6 +50,8 @@ func serveTracker(w http.ResponseWriter, r *http.Request) {
 			rec = db.New(id)
 		}
 
+		log.Printf("page=tracker id=%s", id)
+
 		for _, k := range params {
 			v := r.FormValue(k)
 			if v == "" {
@@ -54,11 +59,11 @@ func serveTracker(w http.ResponseWriter, r *http.Request) {
 			}
 
 			switch k {
-			case "pv": // page view
+			case "p": // page view
 				rec.PageView++
-			case "vr": // visitor
-				rec.Visitor++
-			case "v": // visit
+			case "u": // unique visitor
+				rec.UniqueVisitor++
+			case "v": // visits
 				rec.Visit++
 			case "r": // return visitor
 				rec.ReturnVisitor++
@@ -78,11 +83,22 @@ func serveDashboard(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/plain")
 
 		id := r.FormValue("i")
-		rec := db.Get(id)
+		if id == "" {
+			http.Error(w, "Forbidden", 403)
+			return
+		}
 
-		fmt.Fprintf("%s: %d\n", "PageView", rec.PageView)
-		fmt.Fprintf("%s: %d\n", "Visit", rec.Visit)
-		fmt.Fprintf("%s: %d\n", "Visitor", rec.Visitor)
-		fmt.Fprintf("%s: %d\n", "ReturnVisitor", rec.ReturnVisitor)
+		log.Printf("page=dashboard id=%s", id)
+
+		rec := db.Get(id)
+		if rec == nil {
+			http.Error(w, "Unprocessable Entity", 422)
+			return
+		}
+
+		fmt.Fprintf(w, "%s: %d\n", "PageView", rec.PageView)
+		fmt.Fprintf(w, "%s: %d\n", "Visit", rec.Visit)
+		fmt.Fprintf(w, "%s: %d\n", "UniqueVisitor", rec.UniqueVisitor)
+		fmt.Fprintf(w, "%s: %d\n", "ReturnVisitor", rec.ReturnVisitor)
 	}
 }

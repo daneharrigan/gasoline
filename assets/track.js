@@ -1,5 +1,11 @@
+function debug(message) {
+	console.debug("app=gasoline " + message)
+};
+
 _gasoline = _gasoline || [];
+
 (function(){
+	debug("fn=start")
 	var accountId,
 	    image = new Image,
 	    w = window,
@@ -52,31 +58,36 @@ _gasoline = _gasoline || [];
 			return true
 		}
 
-		return (d.referrer.indexOf(d.location.origin) == 0)
+		return !(d.referrer.indexOf(d.location.origin) == 0)
 	}
 
 	function returnVisitor() {
-		return !!existingCookie("_gasoline_visitor", 1)
+		return !existingCookie("_gasoline_visitor", 1)
 	}
 
 	function uniqueVisitor() {
-		return !!existingCookie("_gasoline_unique", 365)
+		return !existingCookie("_gasoline_unique", 365)
 	}
 
 	function track() {
+		debug("fn=track")
 		var payload = "?"
 		var params = {
 			i: accoutId,
 			u: uniqueVisitor,
-			pv: pageView,
+			p: pageView,
 			v: visit,
-			vr: visitor,
-			rv: returnVisitor
+			r: returnVisitor
 		}
 
 		for(var k in params) {
-			if(params[k]()) {
-				payload += "&" + k + "=1"
+			var v = params[k]
+			if(typeof v == "function") {
+				if(v()) {
+					payload += "&" + k + "=1" 
+				}
+			} else {
+				payload += "&" + k + "=" + v
 			}
 		}
 
@@ -90,7 +101,8 @@ _gasoline = _gasoline || [];
 		}
 	}
 
+	debug("fn=shift")
 	while(args = _gasoline.shift()) {
 		_gasoline.push(args)
 	}
-});
+})();
