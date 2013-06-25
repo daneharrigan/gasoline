@@ -134,25 +134,8 @@ func serveDashboard(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Length", "0")
 		w.Header().Set("Allow", "OPTIONS, GET")
 	case "GET":
-		w.Header().Set("Content-Type", "text/plain")
-
-		id := r.FormValue("i")
-		if id == "" {
-			http.Error(w, "Forbidden", 403)
-			return
-		}
-
-		log.Printf("fn=serveDashboard id=%s", id)
-
-		rec := db.Get(id)
-		if rec == nil {
-			http.Error(w, "Unprocessable Entity", 422)
-			return
-		}
-
-		fmt.Fprintf(w, "%s: %d\n", "PageView", rec.PageView)
-		fmt.Fprintf(w, "%s: %d\n", "Visit", rec.Visit)
-		fmt.Fprintf(w, "%s: %d\n", "UniqueVisitor", rec.UniqueVisitor)
-		fmt.Fprintf(w, "%s: %d\n", "ReturnVisitor", rec.ReturnVisitor)
+		w.Header().Set("Content-Type", "text/html")
+		log.Println("fn=serveDashboard")
+		http.ServeFile(w, r, "assets/dashboard.html")
 	}
 }
