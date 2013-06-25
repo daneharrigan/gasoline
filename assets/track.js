@@ -54,11 +54,7 @@ _gasoline = _gasoline || [];
 	}
 
 	function visit() {
-		if(!d.referrer) {
-			return true
-		}
-
-		return !(d.referrer.indexOf(d.location.origin) == 0)
+		return d.referrer.indexOf(d.location.origin) != 0
 	}
 
 	function returnVisitor() {
