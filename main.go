@@ -50,7 +50,7 @@ func serveTracker(w http.ResponseWriter, r *http.Request) {
 			rec = db.New(id)
 		}
 
-		log.Printf("page=tracker id=%s", id)
+		log.Printf("fn=serveTracker id=%s", id)
 
 		for _, k := range params {
 			v := r.FormValue(k)
@@ -90,7 +90,7 @@ func serveDashboard(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		log.Printf("page=dashboard id=%s", id)
+		log.Printf("fn=serveDashboard id=%s", id)
 
 		rec := db.Get(id)
 		if rec == nil {
