@@ -1,13 +1,14 @@
 package db
 
 import (
-	"github.com/bmizerany/perks/topk"
+	"github.com/daneharrigan/perks/topk"
 	"sync"
 )
 
 var (
 	r map[string]*Record
 	l sync.RWMutex
+	k = 10
 )
 
 type Record struct {
@@ -27,7 +28,7 @@ func New(id string) *Record {
 	l.Lock()
 	defer l.Unlock()
 
-	r[id] = &Record{TopK: topk.New(10)}
+	r[id] = &Record{TopK: topk.New(k)}
 	return r[id]
 }
 
@@ -36,4 +37,15 @@ func Get(id string) *Record {
 	defer l.Unlock()
 
 	return r[id]
+}
+
+func (rec *Record) Flush() {
+	l.Lock()
+	defer l.Unlock()
+
+	rec.PageView = 0
+	rec.Visit = 0
+	rec.UniqueVisitor = 0
+	rec.ReturnVisitor = 0
+	rec.TopK = topk.New(k)
 }

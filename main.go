@@ -1,16 +1,20 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"gasoline/db"
+	"github.com/daneharrigan/perks/topk"
 	"log"
 	"net/http"
+	"time"
 )
 
 var (
 	port   = flag.String("p", "5000", "Web service port")
 	params = []string{"i", "u", "p", "v", "r", "l"}
+	event  = "event: %s\n\ndata: %s\n\nid: %s\n\n"
 )
 
 func main() {
@@ -20,6 +24,7 @@ func main() {
 
 	http.HandleFunc("/tracker", serveTracker)
 	http.HandleFunc("/dashboard", serveDashboard)
+	http.HandleFunc("/stream", serveStream)
 	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets"))))
 
 	log.Println("fn=ListenAndServe")
@@ -70,6 +75,53 @@ func serveTracker(w http.ResponseWriter, r *http.Request) {
 			case "l":
 				rec.TopK.Insert(v)
 			}
+		}
+	}
+}
+
+func serveStream(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	default:
+		http.Error(w, "Method Not Allowed", 405)
+	case "OPTIONS":
+		w.Header().Set("Content-Length", "0")
+		w.Header().Set("Allow", "OPTIONS, GET")
+	case "GET":
+		id := r.FormValue("i")
+		if id == "" {
+			http.Error(w, "Forbidden", 403)
+			return
+		}
+
+		log.Printf("fn=serveStream id=%s", id)
+		w.Header().Set("Content-Type", "text/event-stream")
+		f, _ := w.(http.Flusher)
+
+		for {
+			var data struct {
+				PageView      int64
+				Visit         int64
+				UniqueVisitor int64
+				ReturnVisitor int64
+				TopView       topk.Samples
+			}
+
+			rec := db.Get(id)
+			if rec != nil {
+				data.PageView = rec.PageView
+				data.Visit = rec.Visit
+				data.UniqueVisitor = rec.UniqueVisitor
+				data.ReturnVisitor = rec.ReturnVisitor
+				data.TopView = rec.TopK.Query()
+			}
+
+			payload, _ := json.Marshal(&data)
+			stamp := time.Now().UTC().Format(time.RFC3339)
+
+			fmt.Fprintf(w, event, "update", payload, stamp)
+			f.Flush()
+
+			time.Sleep(1 * time.Second)
 		}
 	}
 }
