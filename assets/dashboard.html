@@ -7,11 +7,101 @@ document.addEventListener("DOMContentLoaded", function(){
 	source.addEventListener("error", handleError)
 
 	function handleSteam(event) {
-		document.write(event.data)
+    var data = JSON.parse(event.data)
+    for(var k in data) {
+      var value = data[k]
+      switch(k) {
+      case "PageView":
+        updateElement("#page-view .value", value)
+        break
+      case "Visit":
+        updateElement("#visit .value", value)
+        break
+      case "UniqueVisitor":
+        updateElement("#unique-visitor .value", value)
+        break
+      case "ReturnVisitor":
+        updateElement("#return-visitor .value", value)
+        break
+      case "TopView":
+        updateList("#top-view", value)
+        break
+      }
+    }
 	}
 
 	function handleError() {
 		source.close()
 	}
+
+  function updateElement(selector, value) {
+    document.querySelector(selector).innerText = value
+  }
+
+  function updateList(selector, list) {
+    if(!list) {
+      return
+    }
+
+    var el = document.querySelector(selector),
+        li = el.querySelectorAll("li")
+
+    for(var i=0; i<list.length; i++) {
+      var value = list[i].Value,
+          count = list[i].Count,
+          u, c
+
+      if(li[i]) {
+        u = li[i].querySelector(".url")
+        c = li[i].querySelector(".value")
+      } else {
+        var l = document.createElement("li")
+            u = document.createElement("span"),
+            c = document.createElement("span")
+
+        u.setAttribute("class", "url")
+        c.setAttribute("class", "value")
+
+        l.appendChild(u)
+        l.appendChild(c)
+        el.appendChild(l)
+      }
+
+      if(u.innerText != value) {
+        u.innerText = value
+      }
+
+      if(c.innerText != count) {
+        c.innerText = count
+      }
+    }
+  }
 })
 </script>
+
+<ul>
+  <li id="page-view">
+    <strong>Page Views:</strong>
+    <span class="value"></span>
+  </li>
+
+  <li id="visit">
+    <strong>Visits:</strong>
+    <span class="value"></span>
+  </li>
+
+  <li id="unique-visitor">
+    <strong>Unique Visitors:</strong>
+    <span class="value"></span>
+  </li>
+
+  <li id="return-visitor">
+    <strong>Returning Visitors:</strong>
+    <span class="value"></span>
+  </li>
+</ul>
+
+<hr>
+
+<ul id="top-view">
+</ul>
