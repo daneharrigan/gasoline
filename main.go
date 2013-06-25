@@ -14,7 +14,7 @@ import (
 var (
 	port   = flag.String("p", "5000", "Web service port")
 	params = []string{"i", "u", "p", "v", "r", "l"}
-	event  = "event: %s\n\ndata: %s\n\nid: %s\n\n"
+	event  = "event: %s\nid: %s\ndata: %s\n\n"
 )
 
 func main() {
@@ -118,7 +118,7 @@ func serveStream(w http.ResponseWriter, r *http.Request) {
 			payload, _ := json.Marshal(&data)
 			stamp := time.Now().UTC().Format(time.RFC3339)
 
-			fmt.Fprintf(w, event, "update", payload, stamp)
+			fmt.Fprintf(w, event, "update", stamp, payload)
 			f.Flush()
 
 			time.Sleep(1 * time.Second)

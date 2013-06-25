@@ -1,2 +1,17 @@
 <!doctype html>
-<h1>hello</h1>
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+	var source = new EventSource("/stream?i=ebe7b2084a8d0cb0")
+
+	source.addEventListener("update", handleSteam, false)
+	source.addEventListener("error", handleError)
+
+	function handleSteam(event) {
+		document.write(event.data)
+	}
+
+	function handleError() {
+		source.close()
+	}
+})
+</script>
