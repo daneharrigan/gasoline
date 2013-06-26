@@ -72,8 +72,9 @@ func serveTracker(w http.ResponseWriter, r *http.Request) {
 				rec.Visit++
 			case "r": // return visitor
 				rec.ReturnVisitor++
-			case "l":
+			case "l": // most popular url
 				rec.TopK.Insert(v)
+			case "f": // available features
 			}
 		}
 	}

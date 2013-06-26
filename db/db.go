@@ -1,6 +1,7 @@
 package db
 
 import (
+	"gasoline/sum"
 	"github.com/daneharrigan/perks/topk"
 	"sync"
 )
@@ -18,6 +19,7 @@ type Record struct {
 	UniqueVisitor int64
 	ReturnVisitor int64
 	TopK          *topk.Stream
+	Features      *sum.Stream
 }
 
 func init() {
@@ -28,7 +30,7 @@ func New(id string) *Record {
 	l.Lock()
 	defer l.Unlock()
 
-	r[id] = &Record{TopK: topk.New(k)}
+	r[id] = &Record{TopK: topk.New(k), Features: sum.New()}
 	return r[id]
 }
 
