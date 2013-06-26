@@ -13,15 +13,18 @@ type Stream struct {
 	r map[string]*Element
 }
 
-func New() *Stream {
-	return &Stream{r: make(map[string]*Element)}
+func New(keys ...string) *Stream {
+	r := make(map[string]*Element)
+	for _, k := range keys {
+		r[k] = &Element{Value: k, Count: 0}
+	}
+
+	return &Stream{r: r}
 }
 
 func (s *Stream) Insert(x string) {
-	if e := s.r[x]; e != nil {
+	if e, ok := s.r[x]; ok {
 		e.Count++
-	} else {
-		s.r[x] = &Element{Value: x, Count: 1}
 	}
 }
 
