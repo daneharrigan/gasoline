@@ -5,15 +5,17 @@ import (
 	"flag"
 	"fmt"
 	"gasoline/db"
+	"gasoline/sum"
 	"github.com/daneharrigan/perks/topk"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 )
 
 var (
 	port   = flag.String("p", "5000", "Web service port")
-	params = []string{"i", "u", "p", "v", "r", "l"}
+	params = []string{"i", "u", "p", "v", "r", "l", "f"}
 	event  = "event: %s\nid: %s\ndata: %s\n\n"
 )
 
@@ -75,6 +77,10 @@ func serveTracker(w http.ResponseWriter, r *http.Request) {
 			case "l": // most popular url
 				rec.TopK.Insert(v)
 			case "f": // available features
+				fs := strings.Split(v, ",")
+				for _, f := range fs {
+					rec.Features.Insert(f)
+				}
 			}
 		}
 	}
@@ -105,6 +111,7 @@ func serveStream(w http.ResponseWriter, r *http.Request) {
 				UniqueVisitor int64
 				ReturnVisitor int64
 				TopView       topk.Samples
+				Features      sum.Results
 			}
 
 			rec := db.Get(id)
@@ -114,6 +121,7 @@ func serveStream(w http.ResponseWriter, r *http.Request) {
 				data.UniqueVisitor = rec.UniqueVisitor
 				data.ReturnVisitor = rec.ReturnVisitor
 				data.TopView = rec.TopK.Query()
+				data.Features = rec.Features.Query()
 			}
 
 			payload, _ := json.Marshal(&data)
