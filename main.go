@@ -26,6 +26,7 @@ func main() {
 
 	http.HandleFunc("/tracker", serveTracker)
 	http.HandleFunc("/dashboard", serveDashboard)
+	http.HandleFunc("/example", serveExample)
 	http.HandleFunc("/stream", serveStream)
 	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets"))))
 
@@ -147,4 +148,10 @@ func serveDashboard(w http.ResponseWriter, r *http.Request) {
 		log.Println("fn=serveDashboard")
 		http.ServeFile(w, r, "assets/dashboard.html")
 	}
+}
+
+func serveExample(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html")
+	log.Println("fn=serveExample")
+	http.ServeFile(w, r, "assets/example.html")
 }
