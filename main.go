@@ -118,7 +118,7 @@ func serveStream(w http.ResponseWriter, r *http.Request) {
 				TopView       topk.Samples
 				Features      sum.Results
 				Resolutions   sum.Results
-				OS		sum.Results
+				OS            sum.Results
 			}
 
 			rec := db.Get(id)
