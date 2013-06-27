@@ -82,6 +82,10 @@ func serveTracker(w http.ResponseWriter, r *http.Request) {
 				for _, f := range fs {
 					rec.Features.Insert(f)
 				}
+			case "d": // resolution/screen dimension
+				rec.Resolutions.Insert(v)
+			case "o": // operating system
+				rec.OS.Insert(v)
 			}
 		}
 	}
