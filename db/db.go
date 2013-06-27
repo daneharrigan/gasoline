@@ -30,7 +30,12 @@ func New(id string) *Record {
 	l.Lock()
 	defer l.Unlock()
 
-	r[id] = &Record{TopK: topk.New(k), Features: sum.New()}
+	r[id] = &Record{
+		TopK:     topk.New(k),
+		Features: sum.New("Cookies", "QuickTime", "Shockwave Flash", "Google Talk",
+      "Java Applet", "Silverlight", "Retina Display"),
+	}
+
 	return r[id]
 }
 

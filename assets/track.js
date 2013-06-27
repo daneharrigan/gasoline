@@ -65,6 +65,31 @@ _gasoline = _gasoline || [];
 		return !existingCookie("_gasoline_unique", 365)
 	}
 
+	function features() {
+		var value = []
+
+    // Cookies
+    if(n.cookieEnabled) {
+      value.push("Cookies")
+    }
+
+		// Retina Display
+    if(w.devicePixelRatio > 1) {
+      value.push(escape("Retina Display"))
+    }
+
+		// Silverlight, Flash, QuickTime, Google Talk, Java Applet
+    var p = n.plugins
+    for(var i=0; i<p.length; i++) {
+      var name = escape(p[i].name.split(/ plug-?in/i)[0])
+      if(value.indexOf(name) == -1) {
+        value.push(name)
+      }
+    }
+
+    return value.join(",")
+	}
+
 	function track() {
 		debug("fn=track")
 		var payload = "?"
@@ -74,7 +99,8 @@ _gasoline = _gasoline || [];
 			p: pageView,
 			v: visit,
 			r: returnVisitor,
-			l: escape(w.location.pathname)
+			l: escape(w.location.pathname),
+			f: features()
 		}
 
 		for(var k in params) {
@@ -83,7 +109,7 @@ _gasoline = _gasoline || [];
 				if(v()) {
 					payload += "&" + k + "=1"
 				}
-			} else {
+      } else {
 				payload += "&" + k + "=" + v
 			}
 		}
