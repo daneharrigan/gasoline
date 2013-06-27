@@ -7,7 +7,7 @@ type Element struct {
 	Count int
 }
 
-type Result []*Element
+type Results []*Element
 
 type Stream struct {
 	r map[string]*Element
@@ -28,24 +28,24 @@ func (s *Stream) Insert(x string) {
 	}
 }
 
-func (s *Stream) Query() Result {
-	var r Result
+func (s *Stream) Query() Results {
+	var r Results
 	for _, e := range s.r {
-		r = append(r, s.r)
+		r = append(r, e)
 	}
 
 	sort.Sort(sort.Reverse(r))
 	return r
 }
 
-func (r Result) Len() int {
+func (r Results) Len() int {
 	return len(r)
 }
 
-func (r Result) Less(a, b int) bool {
+func (r Results) Less(a, b int) bool {
 	return r[a].Count < r[b].Count
 }
 
-func (r Result) Swap(a, b int) {
+func (r Results) Swap(a, b int) {
 	r[a], r[b] = r[b], r[a]
 }
