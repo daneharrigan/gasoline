@@ -111,8 +111,8 @@ _gasoline = _gasoline || [];
 			r: returnVisitor,
 			l: escape(w.location.pathname),
 			f: features(),
-			d: resolution,
-			o: os
+			d: resolution(),
+			o: os()
 		}
 
 		for(var k in params) {
