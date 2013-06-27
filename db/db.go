@@ -21,6 +21,8 @@ type Record struct {
 	ReturnVisitor int64
 	TopK          *topk.Stream
 	Features      *sum.Stream
+	Resolutions   *sum.Stream
+	OS            *sum.Stream
 }
 
 func init() {
@@ -32,8 +34,10 @@ func New(id string) *Record {
 	defer l.Unlock()
 
 	r[id] = &Record{
-		TopK:     topk.New(k),
-		Features: sum.New(fs...),
+		TopK:        topk.New(k),
+		Features:    sum.New(fs...),
+		Resolutions: sum.New(),
+		OS:          sum.New(),
 	}
 
 	return r[id]
@@ -44,16 +48,4 @@ func Get(id string) *Record {
 	defer l.Unlock()
 
 	return r[id]
-}
-
-func (rec *Record) Flush() {
-	l.Lock()
-	defer l.Unlock()
-
-	rec.PageView = 0
-	rec.Visit = 0
-	rec.UniqueVisitor = 0
-	rec.ReturnVisitor = 0
-	rec.TopK = topk.New(k)
-	rec.Features = sum.New(fs...)
 }
