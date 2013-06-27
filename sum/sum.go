@@ -10,7 +10,7 @@ type Element struct {
 type Results []*Element
 
 type Stream struct {
-	r map[string]*Element
+	r       map[string]*Element
 	defined bool
 }
 
@@ -33,7 +33,7 @@ func (s *Stream) Insert(x string) {
 	if e, ok := s.r[x]; ok {
 		e.Count++
 	} else if !s.defined {
-		s.r[x] = &Element{ Value: x, Count: 1 }
+		s.r[x] = &Element{Value: x, Count: 1}
 	}
 }
 

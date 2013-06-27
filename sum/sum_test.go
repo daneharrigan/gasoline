@@ -3,7 +3,7 @@ package sum
 import "testing"
 
 func TestNewWithArgs(t *testing.T) {
-	s := New("a","b")
+	s := New("a", "b")
 	// insert values
 	s.Insert("a")
 	s.Insert("a")
