@@ -7,9 +7,11 @@ import (
 )
 
 var (
-	r map[string]*Record
-	l sync.RWMutex
-	k = 10
+	r  map[string]*Record
+	l  sync.RWMutex
+	k  = 10
+	fs = []string{"Cookies", "QuickTime", "Shockwave Flash", "Google Talk",
+		"Java Applet", "Silverlight", "Retina Display"}
 )
 
 type Record struct {
@@ -30,9 +32,8 @@ func New(id string) *Record {
 	defer l.Unlock()
 
 	r[id] = &Record{
-		TopK: topk.New(k),
-		Features: sum.New("Cookies", "QuickTime", "Shockwave Flash", "Google Talk",
-			"Java Applet", "Silverlight", "Retina Display"),
+		TopK:     topk.New(k),
+		Features: sum.New(fs...),
 	}
 
 	return r[id]
@@ -54,4 +55,5 @@ func (rec *Record) Flush() {
 	rec.UniqueVisitor = 0
 	rec.ReturnVisitor = 0
 	rec.TopK = topk.New(k)
+	rec.Features = sum.New(fs...)
 }
