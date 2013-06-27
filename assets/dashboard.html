@@ -1,4 +1,15 @@
 <!doctype html>
+<style type="text/css">
+body {
+	font: 14px "Helvetica Neue", Helvetica, sans-serif;
+	color: #666;
+}
+
+.label {
+	font-weight: bold;
+	margin-right: 5px;
+}
+</style>
 <script>
 document.addEventListener("DOMContentLoaded", function(){
 	var source = new EventSource("/stream?i=ebe7b2084a8d0cb0")
@@ -28,6 +39,12 @@ document.addEventListener("DOMContentLoaded", function(){
 				break
 			case "Features":
 				updateList("#features", value)
+				break
+			case "Resolutions":
+				updateList("#resolutions", value)
+				break
+			case "OS":
+				updateList("#os", value)
 				break
 			}
 		}
@@ -74,9 +91,7 @@ document.addEventListener("DOMContentLoaded", function(){
 				v.innerText = value
 			}
 
-			if(c.innerText != count) {
-				c.innerText = count
-			}
+			c.innerText = count
 		}
 	}
 })
@@ -111,3 +126,11 @@ document.addEventListener("DOMContentLoaded", function(){
 <hr>
 
 <ul id="features"></ul>
+
+<hr>
+
+<ul id="resolutions"></ul>
+
+<hr>
+
+<ul id="os"></ul>
