@@ -10,7 +10,8 @@ _gasoline = _gasoline || [];
 	    image = new Image,
 	    w = window,
 	    d = document,
-	    n = navigator
+	    n = navigator,
+	    s = screen
 
 	function setCookie(name, value, lifespan) {
 		var cookie = name + "=" + escape(value)
@@ -91,6 +92,14 @@ _gasoline = _gasoline || [];
 		return value.join(",")
 	}
 
+	function resolution() {
+		return s.width + "x" + s.height
+	}
+
+	function os() {
+		return n.platform
+	}
+
 	function track() {
 		debug("fn=track")
 		var payload = "?"
@@ -101,7 +110,9 @@ _gasoline = _gasoline || [];
 			v: visit,
 			r: returnVisitor,
 			l: escape(w.location.pathname),
-			f: features()
+			f: features(),
+			d: resolution,
+			o: os
 		}
 
 		for(var k in params) {
