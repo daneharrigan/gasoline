@@ -9,7 +9,8 @@ _gasoline = _gasoline || [];
 	var accountId,
 	    image = new Image,
 	    w = window,
-	    d = document
+	    d = document,
+	    n = navigator
 
 	function setCookie(name, value, lifespan) {
 		var cookie = name + "=" + escape(value)
