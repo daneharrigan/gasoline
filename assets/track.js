@@ -68,26 +68,26 @@ _gasoline = _gasoline || [];
 	function features() {
 		var value = []
 
-    // Cookies
-    if(n.cookieEnabled) {
-      value.push("Cookies")
-    }
+		// Cookies
+		if(n.cookieEnabled) {
+			value.push("Cookies")
+		}
 
 		// Retina Display
-    if(w.devicePixelRatio > 1) {
-      value.push(escape("Retina Display"))
-    }
+		if(w.devicePixelRatio > 1) {
+			value.push(escape("Retina Display"))
+		}
 
 		// Silverlight, Flash, QuickTime, Google Talk, Java Applet
-    var p = n.plugins
-    for(var i=0; i<p.length; i++) {
-      var name = escape(p[i].name.split(/ plug-?in/i)[0])
-      if(value.indexOf(name) == -1) {
-        value.push(name)
-      }
-    }
+		var p = n.plugins
+		for(var i=0; i<p.length; i++) {
+			var name = escape(p[i].name.split(/ plug-?in/i)[0])
+			if(value.indexOf(name) == -1) {
+				value.push(name)
+			}
+		}
 
-    return value.join(",")
+		return value.join(",")
 	}
 
 	function track() {

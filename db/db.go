@@ -13,7 +13,6 @@ var (
 )
 
 type Record struct {
-	//Hit int64
 	PageView      int64
 	Visit         int64
 	UniqueVisitor int64
@@ -31,9 +30,9 @@ func New(id string) *Record {
 	defer l.Unlock()
 
 	r[id] = &Record{
-		TopK:     topk.New(k),
+		TopK: topk.New(k),
 		Features: sum.New("Cookies", "QuickTime", "Shockwave Flash", "Google Talk",
-      "Java Applet", "Silverlight", "Retina Display"),
+			"Java Applet", "Silverlight", "Retina Display"),
 	}
 
 	return r[id]
