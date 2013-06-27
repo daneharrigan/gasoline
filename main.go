@@ -15,7 +15,7 @@ import (
 
 var (
 	port   = flag.String("p", "5000", "Web service port")
-	params = []string{"i", "u", "p", "v", "r", "l", "f"}
+	params = []string{"i", "u", "p", "v", "r", "l", "f", "d", "o"}
 	event  = "event: %s\nid: %s\ndata: %s\n\n"
 )
 
@@ -117,6 +117,8 @@ func serveStream(w http.ResponseWriter, r *http.Request) {
 				ReturnVisitor int64
 				TopView       topk.Samples
 				Features      sum.Results
+				Resolutions   sum.Results
+				OS		sum.Results
 			}
 
 			rec := db.Get(id)
@@ -127,6 +129,8 @@ func serveStream(w http.ResponseWriter, r *http.Request) {
 				data.ReturnVisitor = rec.ReturnVisitor
 				data.TopView = rec.TopK.Query()
 				data.Features = rec.Features.Query()
+				data.Resolutions = rec.Resolutions.Query()
+				data.OS = rec.OS.Query()
 			}
 
 			payload, _ := json.Marshal(&data)
