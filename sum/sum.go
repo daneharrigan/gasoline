@@ -11,20 +11,29 @@ type Results []*Element
 
 type Stream struct {
 	r map[string]*Element
+	defined bool
 }
 
 func New(keys ...string) *Stream {
 	r := make(map[string]*Element)
-	for _, k := range keys {
-		r[k] = &Element{Value: k, Count: 0}
+	s := new(Stream)
+
+	if len(keys) > 0 {
+		s.defined = true
+		for _, k := range keys {
+			r[k] = &Element{Value: k, Count: 0}
+		}
 	}
 
-	return &Stream{r: r}
+	s.r = r
+	return s
 }
 
 func (s *Stream) Insert(x string) {
 	if e, ok := s.r[x]; ok {
 		e.Count++
+	} else if !s.defined {
+		s.r[x] = &Element{ Value: x, Count: 1 }
 	}
 }
 
