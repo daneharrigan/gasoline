@@ -7,11 +7,16 @@ _gasoline = _gasoline || [];
 (function(){
 	debug("fn=start")
 	var accountId,
-	    image = new Image,
 	    w = window,
 	    d = document,
 	    n = navigator,
-	    s = screen
+	    s = screen,
+      pn = w.location.pathname,
+	    image = new Image,
+	    start = 0,
+	    url = w.location.pathname
+
+  w.addEventListener("beforeunload", trackTime)
 
 	function setCookie(name, value, lifespan) {
 		var cookie = name + "=" + escape(value)
@@ -100,20 +105,9 @@ _gasoline = _gasoline || [];
 		return n.platform
 	}
 
-	function track() {
+  function track(params) {
 		debug("fn=track")
 		var payload = "?"
-		var params = {
-			i: accoutId,
-			u: uniqueVisitor,
-			p: pageView,
-			v: visit,
-			r: returnVisitor,
-			l: escape(w.location.pathname),
-			f: features(),
-			d: resolution(),
-			o: os()
-		}
 
 		for(var k in params) {
 			var v = params[k]
@@ -127,7 +121,34 @@ _gasoline = _gasoline || [];
 		}
 
 		image.src = "/tracker" + payload
+  }
+
+	function trackPage() {
+    trackTime()
+    start = new Date
+		track({
+			i: accoutId,
+			u: uniqueVisitor,
+			p: pageView,
+			v: visit,
+			r: returnVisitor,
+			l: escape(w.location.pathname),
+			f: features(),
+			d: resolution(),
+			o: os()
+		})
 	}
+
+  function trackTime() {
+    if(!start) {
+      return
+    }
+
+    track({
+      t: ((new Date) - start) / 1000,
+      url: escape(url)
+    })
+  }
 
 	_gasoline.push = function(value) {
 		switch(value[0]) {
