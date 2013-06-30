@@ -16,7 +16,7 @@ _gasoline = _gasoline || [];
 	    start = 0,
 	    url = w.location.pathname
 
-  w.addEventListener("beforeunload", trackTime)
+	w.addEventListener("beforeunload", trackTime)
 
 	function setCookie(name, value, lifespan) {
 		var cookie = name + "=" + escape(value)
@@ -124,8 +124,9 @@ _gasoline = _gasoline || [];
   }
 
 	function trackPage() {
-    trackTime()
-    start = new Date
+		trackTime()
+		start = new Date
+
 		track({
 			i: accoutId,
 			u: uniqueVisitor,
@@ -139,16 +140,16 @@ _gasoline = _gasoline || [];
 		})
 	}
 
-  function trackTime() {
-    if(!start) {
-      return
-    }
+	function trackTime() {
+		if(!start) {
+			return
+		}
 
-    track({
-      t: ((new Date) - start) / 1000,
-      url: escape(url)
-    })
-  }
+		track({
+			t: ((new Date) - start) / 1000,
+			url: escape(url)
+		})
+	}
 
 	_gasoline.push = function(value) {
 		switch(value[0]) {
