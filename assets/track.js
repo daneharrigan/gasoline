@@ -11,10 +11,9 @@ _gasoline = _gasoline || [];
 	    d = document,
 	    n = navigator,
 	    s = screen,
-      pn = w.location.pathname,
 	    image = new Image,
 	    start = 0,
-	    url = w.location.pathname
+	    url   = null
 
 	w.addEventListener("beforeunload", trackTime)
 
@@ -115,17 +114,16 @@ _gasoline = _gasoline || [];
 				if(v()) {
 					payload += "&" + k + "=1"
 				}
-      } else {
+			} else {
 				payload += "&" + k + "=" + v
 			}
 		}
 
 		image.src = "/tracker" + payload
-  }
+	}
 
 	function trackPage() {
 		trackTime()
-		start = new Date
 
 		track({
 			i: accoutId,
@@ -133,7 +131,7 @@ _gasoline = _gasoline || [];
 			p: pageView,
 			v: visit,
 			r: returnVisitor,
-			l: escape(w.location.pathname),
+			l: escape(url),
 			f: features(),
 			d: resolution(),
 			o: os()
@@ -141,20 +139,22 @@ _gasoline = _gasoline || [];
 	}
 
 	function trackTime() {
-		if(!start) {
-			return
+		if(start) {
+			track({
+				i: accountId,
+				t: ((new Date) - start) / 1000,
+				url: escape(url)
+			})
 		}
 
-		track({
-			t: ((new Date) - start) / 1000,
-			url: escape(url)
-		})
+		start = new Date
+		url = w.location.pathname
 	}
 
 	_gasoline.push = function(value) {
 		switch(value[0]) {
 		case "account": accoutId = value[1]; break
-		case "track": track()
+		case "track": trackPage()
 		}
 	}
 
