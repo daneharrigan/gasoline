@@ -9,6 +9,7 @@ import (
 	"github.com/daneharrigan/perks/topk"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -93,7 +94,8 @@ func serveTracker(w http.ResponseWriter, r *http.Request) {
 					continue
 				}
 
-				rec.viewDuration(r.FormValue("url"), t)
+				log.Printf("url=%s duration=%f", r.FormValue("url"), t)
+				rec.ViewDuration(r.FormValue("url"), t)
 			}
 		}
 	}

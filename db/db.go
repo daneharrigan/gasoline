@@ -60,7 +60,9 @@ func (r *Record) ViewDuration(u string, d float64) {
 	defer r.l.Unlock()
 
 	var s *quantile.Stream
-	if s, ok := r.ViewDurations[u]; !ok {
+	var ok bool
+
+	if s, ok = r.ViewDurations[u]; !ok {
 		s = quantile.NewTargeted(ps...)
 		r.ViewDurations[u] = s
 	}
