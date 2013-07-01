@@ -126,7 +126,7 @@ _gasoline = _gasoline || [];
 		trackTime()
 
 		track({
-			i: accoutId,
+			i: accountId,
 			u: uniqueVisitor,
 			p: pageView,
 			v: visit,
@@ -153,7 +153,7 @@ _gasoline = _gasoline || [];
 
 	_gasoline.push = function(value) {
 		switch(value[0]) {
-		case "account": accoutId = value[1]; break
+		case "account": accountId = value[1]; break
 		case "track": trackPage()
 		}
 	}
