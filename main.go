@@ -15,7 +15,7 @@ import (
 
 var (
 	port   = flag.String("p", "5000", "Web service port")
-	params = []string{"i", "u", "p", "v", "r", "l", "f", "d", "o"}
+	params = []string{"i", "u", "p", "v", "r", "l", "f", "d", "o", "t"}
 	event  = "event: %s\nid: %s\ndata: %s\n\n"
 )
 
@@ -86,6 +86,14 @@ func serveTracker(w http.ResponseWriter, r *http.Request) {
 				rec.Resolutions.Insert(v)
 			case "o": // operating system
 				rec.OS.Insert(v)
+			case "t":
+				t, err := strconv.ParseFloat(v, 64)
+				if err != nil {
+					log.Printf("fn=ParseFloat error=%q", err)
+					continue
+				}
+
+				rec.viewDuration(r.FormValue("url"), t)
 			}
 		}
 	}
