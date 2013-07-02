@@ -16,7 +16,7 @@ import (
 
 var (
 	port   = flag.String("p", "5000", "Web service port")
-	params = []string{"i", "u", "p", "v", "r", "l", "f", "d", "o", "t"}
+	params = []string{"i", "u", "p", "v", "r", "l", "f", "d", "o", "t", "a"}
 	event  = "event: %s\nid: %s\ndata: %s\n\n"
 )
 
@@ -60,6 +60,7 @@ func serveTracker(w http.ResponseWriter, r *http.Request) {
 		}
 
 		log.Printf("fn=serveTracker id=%s", id)
+		values := make(map[string]string)
 
 		for _, k := range params {
 			v := r.FormValue(k)
@@ -67,36 +68,50 @@ func serveTracker(w http.ResponseWriter, r *http.Request) {
 				continue
 			}
 
-			switch k {
-			case "p": // page view
-				rec.PageView++
-			case "u": // unique visitor
-				rec.UniqueVisitor++
-			case "v": // visits
-				rec.Visit++
-			case "r": // return visitor
-				rec.ReturnVisitor++
-			case "l": // most popular url
-				rec.TopK.Insert(v)
-			case "f": // available features
-				fs := strings.Split(v, ",")
-				for _, f := range fs {
-					rec.Features.Insert(f)
-				}
-			case "d": // resolution/screen dimension
-				rec.Resolutions.Insert(v)
-			case "o": // operating system
-				rec.OS.Insert(v)
-			case "t":
-				t, err := strconv.ParseFloat(v, 64)
-				if err != nil {
-					log.Printf("fn=ParseFloat error=%q", err)
-					continue
-				}
+			values[k] = v
+		}
 
-				log.Printf("url=%s duration=%f", r.FormValue("url"), t)
-				rec.ViewDuration(r.FormValue("url"), t)
+		if r.FormValue("url") != "" {
+			values["url"] = r.FormValue("url")
+		}
+
+		go handle(rec, values)
+	}
+}
+
+func handle(rec *db.Record, values map[string]string) {
+	for k, v := range values {
+		switch k {
+		case "p": // page view
+			rec.PageView++
+		case "u": // unique visitor
+			rec.UniqueVisitor++
+		case "v": // visits
+			rec.Visit++
+		case "r": // return visitor
+			rec.ReturnVisitor++
+		case "l": // most popular url
+			rec.TopK.Insert(v)
+		case "f": // available features
+			fs := strings.Split(v, ",")
+			for _, f := range fs {
+				rec.Features.Insert(f)
 			}
+		case "d": // resolution/screen dimension
+			rec.Resolutions.Insert(v)
+		case "o": // operating system
+			rec.OS.Insert(v)
+		case "t":
+			t, err := strconv.ParseFloat(v, 64)
+			if err != nil {
+				log.Printf("fn=ParseFloat error=%q", err)
+				continue
+			}
+
+			log.Printf("url=%s duration=%f", values["url"], t)
+			rec.ViewDuration(values["url"], t)
+		case "a":
+			log.Printf("a=%q", v)
 		}
 	}
 }
