@@ -11,6 +11,7 @@ _gasoline = _gasoline || [];
 	    d = document,
 	    n = navigator,
 	    s = screen,
+	    e = escape,
 	    image = new Image,
 	    start = 0,
 	    url   = null
@@ -18,7 +19,7 @@ _gasoline = _gasoline || [];
 	w.addEventListener("beforeunload", trackTime)
 
 	function setCookie(name, value, lifespan) {
-		var cookie = name + "=" + escape(value)
+		var cookie = name + "=" + e(value)
 
 		if(lifespan) {
 			cookie += "; expires=" + lifespan
@@ -81,13 +82,13 @@ _gasoline = _gasoline || [];
 
 		// Retina Display
 		if(w.devicePixelRatio > 1) {
-			value.push(escape("Retina Display"))
+			value.push(e("Retina Display"))
 		}
 
 		// Silverlight, Flash, QuickTime, Google Talk, Java Applet
 		var p = n.plugins
 		for(var i=0; i<p.length; i++) {
-			var name = escape(p[i].name.split(/ plug-?in/i)[0])
+			var name = e(p[i].name.split(/ plug-?in/i)[0])
 			if(value.indexOf(name) == -1) {
 				value.push(name)
 			}
@@ -131,10 +132,11 @@ _gasoline = _gasoline || [];
 			p: pageView,
 			v: visit,
 			r: returnVisitor,
-			l: escape(url),
+			l: e(url),
 			f: features(),
 			d: resolution(),
-			o: os()
+			o: os(),
+			a: e(n.userAgent)
 		})
 	}
 
@@ -143,7 +145,7 @@ _gasoline = _gasoline || [];
 			track({
 				i: accountId,
 				t: ((new Date) - start) / 1000,
-				url: escape(url)
+				url: e(url)
 			})
 		}
 
