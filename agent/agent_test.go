@@ -3,32 +3,54 @@ package agent
 import "testing"
 
 func TestSafari6(t *testing.T) {
-  s := "Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25"
-  a := Parse(s)
+	s := "Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25"
+	testAgent(t, s, "6.0", "Safari")
+}
 
-  if a.Version != "6.0" {
-    t.Errorf("version should be 6.0, but was %q", a.Version)
-  }
+func TestSafari517(t *testing.T) {
+	s := "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.13+ (KHTML, like Gecko) Version/5.1.7 Safari/534.57.2"
+	testAgent(t, s, "5.1.7", "Safari")
+}
 
-  if a.Name != "Safari" {
-    t.Errorf("name should be Safari, but was %q", a.Name)
-  }
+func TestSafari504(t *testing.T) {
+	s := "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27"
+	testAgent(t, s, "5.0.4", "Safari")
+}
+
+func TestChrome29(t *testing.T) {
+	s := "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.2 Safari/537.36"
+	testAgent(t, s, "29.0.1547.2", "Chrome")
+}
+
+func TestChrome27(t *testing.T) {
+	s := "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.93 Safari/537.36"
+	testAgent(t, s, "27.0.1453.93", "Chrome")
+}
+
+func TestFirefox24(t *testing.T) {
+	s := "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:24.0) Gecko/20100101 Firefox/24.0"
+	testAgent(t, s, "24.0", "Firefox")
+}
+
+func TestFirefox23(t *testing.T) {
+	s := "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:23.0) Gecko/20131011 Firefox/23.0"
+	testAgent(t, s, "23.0", "Firefox")
+}
+
+func testAgent(t *testing.T, s, v, n string) {
+	a := Parse(s)
+
+	if a.Version != v {
+		t.Errorf("version should be %q, but was %q", v, a.Version)
+	}
+
+	if a.Name != n {
+		t.Errorf("name should be %q, but was %q", n, a.Name)
+	}
 }
 
 /*
-
-// safari
-Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25
-Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.13+ (KHTML, like Gecko) Version/5.1.7 Safari/534.57.2
-Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27
-
-// chrome
-Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.2 Safari/537.36
-Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.93 Safari/537.36
-
 // firefox
-Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:24.0) Gecko/20100101 Firefox/24.0
-Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:23.0) Gecko/20131011 Firefox/23.0
 Mozilla/5.0 (Windows NT 6.1; rv:22.0) Gecko/20130405 Firefox/22.0
 
 // ie
