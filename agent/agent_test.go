@@ -1,5 +1,20 @@
 package agent
 
+import "testing"
+
+func TestSafari6(t *testing.T) {
+  s := "Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25"
+  a := Parse(s)
+
+  if a.Version != "6.0" {
+    t.Errorf("version should be 6.0, but was %q", a.Version)
+  }
+
+  if a.Name != "Safari" {
+    t.Errorf("name should be Safari, but was %q", a.Name)
+  }
+}
+
 /*
 
 // safari
