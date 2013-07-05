@@ -46,6 +46,10 @@ document.addEventListener("DOMContentLoaded", function(){
 			case "OS":
 				updateList("#os", value)
 				break
+			case "BrowserUsage":
+				for(var k in value) {
+					updateList("#browser-" + k, value[k])
+				}
 			}
 		}
 	}
@@ -134,3 +138,16 @@ document.addEventListener("DOMContentLoaded", function(){
 <hr>
 
 <ul id="os"></ul>
+
+<hr>
+
+<dl>
+	<dt>Chrome</dt>
+	<dd><ul id="browser-Chrome"></ul></dd>
+	<dt>Safari</dt>
+	<dd><ul id="browser-Safari"></ul></dd>
+	<dt>Firefox</dt>
+	<dd><ul id="browser-Firefox"></ul></dd>
+	<dt>MSIE</dt>
+	<dd><ul id="browser-MSIE"></ul></dd>
+</dl>
