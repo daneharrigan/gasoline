@@ -27,6 +27,7 @@ type Record struct {
 	Resolutions   *sum.Stream
 	OS            *sum.Stream
 	ViewDurations map[string]*quantile.Stream
+	BrowserUsage  map[string]*sum.Stream
 }
 
 func init() {
@@ -43,6 +44,7 @@ func New(id string) *Record {
 		Resolutions:   sum.New(),
 		OS:            sum.New(),
 		ViewDurations: make(map[string]*quantile.Stream),
+		BrowserUsage:  make(map[string]*sum.Stream),
 	}
 
 	return r[id]
@@ -68,4 +70,19 @@ func (r *Record) ViewDuration(u string, d float64) {
 	}
 
 	s.Insert(d)
+}
+
+func (r *Record) BrowserUsed(n, v string) {
+	r.l.Lock()
+	defer r.l.Unlock()
+
+	var s *sum.Stream
+	var ok bool
+
+	if s, ok = r.BrowserUsage[n]; !ok {
+		s = sum.New()
+		r.BrowserUsage[n] = s
+	}
+
+	s.Insert(v)
 }

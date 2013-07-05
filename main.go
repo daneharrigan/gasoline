@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"gasoline/agent"
 	"gasoline/db"
 	"gasoline/sum"
 	"github.com/daneharrigan/perks/topk"
@@ -111,7 +112,8 @@ func handle(rec *db.Record, values map[string]string) {
 			log.Printf("url=%s duration=%f", values["url"], t)
 			rec.ViewDuration(values["url"], t)
 		case "a":
-			log.Printf("a=%q", v)
+			a := agent.Parse(v)
+			rec.BrowserUsed(a.Name, a.Version)
 		}
 	}
 }
