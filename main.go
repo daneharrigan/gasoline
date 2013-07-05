@@ -60,7 +60,7 @@ func serveTracker(w http.ResponseWriter, r *http.Request) {
 			rec = db.New(id)
 		}
 
-		log.Printf("fn=serveTracker id=%s", id)
+		log.Println("fn=serveTracker")
 		values := make(map[string]string)
 
 		for _, k := range params {
@@ -109,7 +109,6 @@ func handle(rec *db.Record, values map[string]string) {
 				continue
 			}
 
-			log.Printf("url=%s duration=%f", values["url"], t)
 			rec.ViewDuration(values["url"], t)
 		case "a":
 			a := agent.Parse(v)
@@ -132,7 +131,7 @@ func serveStream(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		log.Printf("fn=serveStream id=%s", id)
+		log.Println("fn=serveStream")
 		w.Header().Set("Content-Type", "text/event-stream")
 		f, _ := w.(http.Flusher)
 
