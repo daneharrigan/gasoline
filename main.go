@@ -146,6 +146,7 @@ func serveStream(w http.ResponseWriter, r *http.Request) {
 				Features      sum.Results
 				Resolutions   sum.Results
 				OS            sum.Results
+				BrowserUsage  map[string]sum.Results
 			}
 
 			rec := db.Get(id)
@@ -158,6 +159,11 @@ func serveStream(w http.ResponseWriter, r *http.Request) {
 				data.Features = rec.Features.Query()
 				data.Resolutions = rec.Resolutions.Query()
 				data.OS = rec.OS.Query()
+				data.BrowserUsage = make(map[string]sum.Results)
+
+				for k, s := range rec.BrowserUsage {
+					data.BrowserUsage[k] = s.Query()
+				}
 			}
 
 			payload, _ := json.Marshal(&data)
