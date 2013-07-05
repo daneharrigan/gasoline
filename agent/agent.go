@@ -32,6 +32,11 @@ func Parse(str string) (a *Agent) {
 				a.Version = kv[1]
 				return
 			}
+		} else if val == "MSIE" {
+			s.Scan()
+			a.Name = val
+			a.Version = strings.Replace(s.Text(), ";", "", 1)
+			return
 		}
 	}
 
