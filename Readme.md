@@ -7,7 +7,7 @@ The project tracks the following user data:
 * Unique Visitors: a user that has reached the web site more than once in a year
 * Returning Visitor: a user that has viewed the web site more than once in a day
 * TopK: the top 10 most frequented web pages and their view counts
-* Features: the count of what users support cookies, quicktime, flash, google talk, java, sliverlight or a retina display
+* Features: the count of what users support cookies, quicktime, flash, google talk, java, silverlight or a retina display
 * Resolutions: display resolutions used to view the web page and their counts
 * OS: operating systems used to view the web page and their counts
 * View Durations: the length of time a user spent on a web page broken down by p50, p95 and p99
