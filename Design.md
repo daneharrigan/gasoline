@@ -2,22 +2,22 @@
 
 A series of notes about how to present the data collected from users.
 
-## Raw Numbers
+### Raw Numbers
 
 Page views, visits, unique visitors and returning visitors should be shown as
 raw/plain numbers.
 
-## Bar graphs
+### Bar graphs
 
 A bar graph can be a clear way to present data archived over time.
 
-## Expandable Pie Chart
+### Expandable Pie Chart
 
 Browser usage could be presented as a pie chart, with all version numbers
 included. When a piece of the pie chart is clicked on, the section explands and
 divides based on the browser version.
 
-## Storage
+### Storage
 
 A table called `Page` with the following fields:
 
