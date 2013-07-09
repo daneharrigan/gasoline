@@ -21,16 +21,16 @@ divides based on the browser version.
 
 A table called `Page` with the following fields:
 
-* Id: __String__ a web site's unique id
-* PageView: __Number__ always incrementing
-* Visit: __Number__ always incrementing
-* UniqueVisitor: __Number__ always incrementing
-* ReturnVisitor: __Number__ always incrementing
+* Id: _String_ a web site's unique id
+* PageView: _Number_ always incrementing
+* Visit: _Number_ always incrementing
+* UniqueVisitor: _Number_ always incrementing
+* ReturnVisitor: _Number_ always incrementing
 
 A table called `Sums` with the following fields:
 
-* Id: __String__ a website's unique id
-* Timestamp: __Number__ time of the save in epoch format
-* Name: __String__ the field name thats being saved
-* Count: __Number__ the sum of elements at the time of saving
-* Type: __String__ the type of data being saved, eg: topk, features, resolution, os, view duration, browser usage
+* Id: _String_ a website's unique id
+* Timestamp: _Number_ time of the save in epoch format
+* Name: _String_ the field name thats being saved
+* Count: _Number_ the sum of elements at the time of saving
+* Type: _String_ the type of data being saved, eg: topk, features, resolution, os, view duration, browser usage
