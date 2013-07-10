@@ -2,146 +2,180 @@
 <script src="/assets/d3.v3.min.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function(){
-  var width = 400,
-      height = 400,
-      radius = Math.min(width, height) / 2;
+	var width = 400,
+			height = 400,
+			radius = Math.min(width, height) / 2;
 
-  var color = d3.scale.ordinal()
-      .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+	var blue  = d3.rgb(0, 170, 227)
+	var color = d3.scale.ordinal()
+			.range([blue, blue.darker(2), blue.darker(4), blue.darker(6)]);
 
-  var arc = d3.svg.arc()
-      .outerRadius(radius - 10)
-      .innerRadius(0);
+	var arc = d3.svg.arc()
+			.outerRadius(radius - 10)
+			.innerRadius(0);
 
-  var pie = d3.layout.pie()
-      .sort(null)
-      .value(function(d) { return d.population; });
+	var pie = d3.layout.pie()
+			.sort(null)
+			.value(function(d) { return d.population; });
 
-  var svg = d3.select("#browser-usage").append("svg")
-      .attr("width", width)
-      .attr("height", height)
-    .append("g")
-      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+	var svg = d3.select("#browser-usage").append("svg")
+			.attr("width", width)
+			.attr("height", height)
+		.append("g")
+			.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-  var data = [
-    { age: "Chrome", population: 1000 },
-    { age: "Safari", population: 500 },
-    { age: "Firefox", population: 200 },
-    { age: "MSIE", population: 150 },
-    { age: "Opera", population: 10 }
-  ];
+	var data = [
+		{ age: "Chrome", population: 1000 },
+		{ age: "Safari", population: 500 },
+		{ age: "Firefox", population: 200 },
+		{ age: "MSIE", population: 150 },
+		{ age: "Opera", population: 10 }
+	];
 
-  var g = svg.selectAll(".arc")
-      .data(pie(data))
-    .enter().append("g")
-      .attr("class", "arc");
+	var g = svg.selectAll(".arc")
+			.data(pie(data))
+		.enter().append("g")
+			.attr("class", "arc");
 
-  g.append("path")
-      .attr("d", arc)
-      .style("fill", function(d) { return color(d.data.age); });
+	g.append("path")
+			.attr("d", arc)
+			.style("fill", function(d) { return color(d.data.age); });
 
-  g.append("text")
-      .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-      .attr("dy", ".35em")
-      .style("text-anchor", "middle")
-      .text(function(d) { return d.data.age; });
+	g.append("text")
+			.attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+			.attr("dy", ".35em")
+			.style("text-anchor", "middle")
+			.text(function(d) { return d.data.age; });
 })
 </script>
 <style>
-  /*
-   * white: #fff
-   * dark blue: #026BB5
-   * light blue: #00AAE3
-   * orange: #FF7729
-   * grey: #474747
-   * https://kuler.adobe.com/SMK-LINK-COLORS-color-theme-2583283/edit/?copy=true&base=2&rule=Custom&selected=4&name=Copy%20of%20SMK-LINK%20COLORS&mode=rgb&rgbvalues=1,1,1,0.00784313725490196,0.4196078431372549,0.7098039215686275,0,0.6666666666666666,0.8901960784313725,1,0.4666666666666667,0.1607843137254902,0.2784313725490196,0.2784313725490196,0.2784313725490196
-   */
+	/*
+	 * white: #fff
+	 * dark blue: #026BB5
+	 * light blue: #00AAE3
+	 * orange: #FF7729
+	 * grey: #474747
+	 * https://kuler.adobe.com/SMK-LINK-COLORS-color-theme-2583283/edit/?copy=true&base=2&rule=Custom&selected=4&name=Copy%20of%20SMK-LINK%20COLORS&mode=rgb&rgbvalues=1,1,1,0.00784313725490196,0.4196078431372549,0.7098039215686275,0,0.6666666666666666,0.8901960784313725,1,0.4666666666666667,0.1607843137254902,0.2784313725490196,0.2784313725490196,0.2784313725490196
+	 */
 
-  * {
-    padding: 0;
-    margin: 0;
-  }
+	* {
+		padding: 0;
+		margin: 0;
+	}
 
-  body {
-    font: 16px/18px "Helvetica Neue", Helvetica, Arial, sans-serif;
-    background: #eee;
-    color: #666;
-  }
+	body {
+		font: 16px/18px "Helvetica Neue", Helvetica, Arial, sans-serif;
+		background: #eee;
+		color: #666;
+	}
 
-  header, #content {
-    background: #fff;
-    padding: 20px 40px;
-  }
+	header, #content {
+		background: #fff;
+		padding: 20px 40px;
+	}
 
-  header {
-    padding-bottom: 0;
-  }
+	header {
+		padding-bottom: 0;
+	}
 
-  h1 {
-    font-size: 14px;
-    font-weight: normal;
-    border-bottom: 1px solid #eee;
-    padding: 0 0 20px 0;
-  }
+	header hgroup {
+		padding: 0 0 20px 0;
+		border-bottom: 1px solid #eee;
+	}
 
+	h1, h2 {
+		font-size: 18px;
+		font-weight: normal;
+		display: inline;
+	}
 
-  #left {
-    width: 300px;
-    border-right: 1px solid #eee;
-    padding-right: 40px;
-    margin-right: 40px;
-    float: left;
-  }
+	h1 {
+		color: #ccc;
+	}
 
-  #left li {
-    list-style: none;
-    padding: 10px 0;
-    border-top: 1px solid #eee;
-  }
+	#left {
+		width: 300px;
+		height: 100%;
+		border-right: 1px solid #eee;
+		padding-right: 40px;
+		margin-right: 40px;
+		float: left;
+	}
 
-  #left li:first-child {
-    padding-top: 0;
-    border-top: none;
-  }
+	#left li {
+		list-style: none;
+		padding: 10px 0;
+		border-top: 1px solid #eee;
+	}
 
-  #left li h3 {
-    font-size: 14px;
-    font-weight: normal;
-    margin-bottom: 5px;
-  }
+	#left li:first-child {
+		padding-top: 0;
+		border-top: none;
+	}
 
-  #left li span {
-    font-size: 24px;
-    color: #00aae3;
-  }
+	#left li h3 {
+		font-size: 14px;
+		font-weight: normal;
+		margin-bottom: 5px;
+	}
 
-  #charts {
-    list-style: none;
-  }
+	#left li span {
+		font-size: 24px;
+		color: #00aae3;
+		display: block;
+	}
+
+	#charts {
+		list-style: none;
+	}
 </style>
 <header>
-  <h1>header</h1>
+	<hgroup>
+		<h1>gasoline</h1>
+		<h2>dane.heroku.com</h2>
+	</hgroup>
 </header>
 <section id="content">
-  <aside id="left">
-    <ul>
-      <li>
-        <h3>Page Views</h3>
-        <span>1,000,000</span>
-      </li>
-      <li>
-        <h3>Unique Visitors</h3>
-        <span>150,000</span>
-      </li>
-      <li>
-        <h3>Returning Visitors</h3>
-        <span>850,000</span>
-      </li>
-    </ul>
-  </aside>
-  <ul id="charts">
-    <li id="browser-usage">
-    </li>
-  </ul>
+	<aside id="left">
+		<ul>
+			<li>
+				<h3>Page Views</h3>
+				<span>1,000,000</span>
+			</li>
+			<li>
+				<h3>Unique Visitors</h3>
+				<span>150,000</span>
+			</li>
+			<li>
+				<h3>Returning Visitors</h3>
+				<span>850,000</span>
+			</li>
+			<li>
+				<h3>Visits</h3>
+				<span>980,000</span>
+			</li>
+			<li>
+				<h3>Frequented Pages</h3>
+				<ol>
+					<li>
+						/
+						<span>50,000</span>
+					</li>
+					<li>
+						/blog/foo-bar-baz
+						<span>10,000</span>
+					</li>
+					<li>
+						/contact
+						<span>5,000</span>
+					</li>
+				<ol>
+			</li>
+		</ul>
+	</aside>
+	<ul id="charts">
+		<li id="browser-usage">
+		</li>
+	</ul>
 </section>
 <!-- <footer>footer</footer> -->
