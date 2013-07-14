@@ -17,7 +17,7 @@ import (
 
 var (
 	port   = flag.String("p", "5000", "Web service port")
-	params = []string{"i", "u", "p", "v", "r", "l", "f", "d", "o", "t", "a"}
+	params = []string{"i", "u", "p", "v", "r", "l", "f", "d", "o", "t", "a", "la"}
 	event  = "event: %s\nid: %s\ndata: %s\n\n"
 )
 
@@ -93,6 +93,8 @@ func handle(rec *db.Record, values map[string]string) {
 			rec.ReturnVisitor++
 		case "l": // most popular url
 			rec.TopK.Insert(v)
+		case "la":
+			rec.Language.Insert(v)
 		case "f": // available features
 			fs := strings.Split(v, ",")
 			for _, f := range fs {

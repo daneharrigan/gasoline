@@ -12,7 +12,7 @@ var (
 	l  sync.RWMutex
 	k  = 10
 	fs = []string{"Cookies", "QuickTime", "Shockwave Flash", "Google Talk",
-		"Java Applet", "Silverlight", "Retina Display"}
+		"Java Applet", "Silverlight", "Retina Display", "Geolocation"}
 	ps = []float64{0.5, 0.9, 0.99}
 )
 
@@ -23,6 +23,7 @@ type Record struct {
 	UniqueVisitor int64
 	ReturnVisitor int64
 	TopK          *topk.Stream
+	Language      *sum.Stream
 	Features      *sum.Stream
 	Resolutions   *sum.Stream
 	OS            *sum.Stream
@@ -42,6 +43,7 @@ func New(id string) *Record {
 		TopK:          topk.New(k),
 		Features:      sum.New(fs...),
 		Resolutions:   sum.New(),
+		Language:      sum.New(),
 		OS:            sum.New(),
 		ViewDurations: make(map[string]*quantile.Stream),
 		BrowserUsage:  make(map[string]*sum.Stream),

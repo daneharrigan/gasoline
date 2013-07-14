@@ -85,6 +85,10 @@ _gasoline = _gasoline || [];
 			value.push(e("Retina Display"))
 		}
 
+		if(n.geolocation) {
+			value.push(e("Geolocation"))
+		}
+
 		// Silverlight, Flash, QuickTime, Google Talk, Java Applet
 		var p = n.plugins
 		for(var i=0; i<p.length; i++) {
@@ -133,6 +137,7 @@ _gasoline = _gasoline || [];
 			v: visit,
 			r: returnVisitor,
 			l: e(url + "|" + d.title),
+			la: e(n.language),
 			f: features(),
 			d: resolution(),
 			o: os(),
