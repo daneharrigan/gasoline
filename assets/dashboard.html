@@ -35,6 +35,11 @@ document.addEventListener("DOMContentLoaded", function(){
 				updateElement("#return-visitor .value", value)
 				break
 			case "TopView":
+				for(var i=0; value.length > i; i++) {
+					var v = value[i].Value.split("|"),
+					    t = v.shift() + "\n"
+					value[i].Value = t + v.join("|")
+				}
 				updateList("#top-view", value)
 				break
 			case "Features":

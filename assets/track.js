@@ -26,12 +26,12 @@ _gasoline = _gasoline || [];
 		}
 
 		cookie += "; path=/"
-		document.cookie = cookie
+		d.cookie = cookie
 	}
 
 	function getCookie(name) {
 		name += "="
-		var cookies = document.cookie.split(";")
+		var cookies = d.cookie.split(";")
 		for(var i=0; i < cookies.length; i++) {
 			var cookie = cookies[i]
 			if(cookie[0] == " ") {
@@ -132,7 +132,7 @@ _gasoline = _gasoline || [];
 			p: pageView,
 			v: visit,
 			r: returnVisitor,
-			l: e(url),
+			l: e(url + "|" + d.title),
 			f: features(),
 			d: resolution(),
 			o: os(),
