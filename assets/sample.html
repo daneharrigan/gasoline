@@ -1,53 +1,4 @@
 <!doctype html>
-<script src="/assets/d3.v3.min.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", function(){
-	var width = 400,
-			height = 400,
-			radius = Math.min(width, height) / 2;
-
-	var blue  = d3.rgb(0, 170, 227)
-	var color = d3.scale.ordinal()
-			.range([blue, blue.darker(2), blue.darker(4), blue.darker(6)]);
-
-	var arc = d3.svg.arc()
-			.outerRadius(radius - 10)
-			.innerRadius(0);
-
-	var pie = d3.layout.pie()
-			.sort(null)
-			.value(function(d) { return d.population; });
-
-	var svg = d3.select("#browser-usage").append("svg")
-			.attr("width", width)
-			.attr("height", height)
-		.append("g")
-			.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-
-	var data = [
-		{ age: "Chrome", population: 1000 },
-		{ age: "Safari", population: 500 },
-		{ age: "Firefox", population: 200 },
-		{ age: "MSIE", population: 150 },
-		{ age: "Opera", population: 10 }
-	];
-
-	var g = svg.selectAll(".arc")
-			.data(pie(data))
-		.enter().append("g")
-			.attr("class", "arc");
-
-	g.append("path")
-			.attr("d", arc)
-			.style("fill", function(d) { return color(d.data.age); });
-
-	g.append("text")
-			.attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-			.attr("dy", ".35em")
-			.style("text-anchor", "middle")
-			.text(function(d) { return d.data.age; });
-})
-</script>
 <style>
 	/*
 	 * white: #fff
@@ -67,6 +18,13 @@ document.addEventListener("DOMContentLoaded", function(){
 		font: 16px/18px "Helvetica Neue", Helvetica, Arial, sans-serif;
 		background: #eee;
 		color: #666;
+	}
+
+	hr {
+		border: none;
+		border-bottom: 1px solid #eee;
+		clear: both;
+		margin: 20px 0;
 	}
 
 	header, #content {
@@ -135,7 +93,15 @@ document.addEventListener("DOMContentLoaded", function(){
 	}
 
 	#charts {
+		float: left;
 		list-style: none;
+	}
+
+	#charts .pie-chart {
+		background: #026BB5;
+		width: 300px;
+		height: 300px;
+		border-radius: 300px;
 	}
 </style>
 <header>
@@ -167,15 +133,18 @@ document.addEventListener("DOMContentLoaded", function(){
 				<h3>Frequented Pages</h3>
 				<ol>
 					<li>
-						/
+						<p>home page title | dane.heroku.com</p>
+						<p>/</p>
 						<span>50,000</span>
 					</li>
 					<li>
-						/blog/foo-bar-baz
+						<p>foo bar baz article | dane.heroku.com</p>
+						<p>/blog/foo-bar-baz</p>
 						<span>10,000</span>
 					</li>
 					<li>
-						/contact
+						<p>contact | dane.heroku.com</p>
+						<p>/contact</p>
 						<span>5,000</span>
 					</li>
 				<ol>
@@ -184,7 +153,9 @@ document.addEventListener("DOMContentLoaded", function(){
 	</aside>
 	<ul id="charts">
 		<li id="browser-usage">
+			<div class="pie-chart"></div>
 		</li>
 	</ul>
+	<hr>
 </section>
 <!-- <footer>footer</footer> -->
