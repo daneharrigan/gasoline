@@ -86,7 +86,15 @@ _gasoline = _gasoline || [];
 		}
 
 		if(n.geolocation) {
-			value.push(e("Geolocation"))
+			value.push("Geolocation")
+		}
+
+		if(w.ontouchstart) {
+			value.push(e("Touch Screen"))
+		}
+
+		if(w.DeviceOrientationEvent || w.DeviceMotionEvent) {
+			value.push(e("Tilt"))
 		}
 
 		// Silverlight, Flash, QuickTime, Google Talk, Java Applet
