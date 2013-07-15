@@ -1,4 +1,43 @@
 <!doctype html>
+<script src="/assets/d3.v3.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+	var data = [
+		{ "x": 10, "y": 5  },
+		{ "x": 20, "y": 10 },
+		{ "x": 30, "y": 15 },
+		{ "x": 40, "y": 20 },
+		{ "x": 50, "y": 25 }
+	]
+
+	var width  = 600,
+	    height = 300,
+	    wBar   = 30,
+	    svg    = d3.select("div.bars").append("svg")
+
+	var x = d3.scale.ordinal()
+	    .domain(d3.range(5))
+	    .rangeRoundBands([0, width], .08)
+
+	svg
+	  .attr("height", height)
+	  .attr("width", width)
+
+	var layer = svg.selectAll(".layer")
+	    .data(data)
+	  .enter().append("g")
+	    .attr("class", "layer")
+	    .attr("style", "fill: blue")
+
+	layer.selectAll("rect")
+	    .data(data)
+	  .enter().append("rect")
+	    .attr("x", function(d, i){ return x(d.x) })
+	    .attr("y", function(d){ return height - d.y })
+	    .attr("width", wBar)
+	    .attr("height", function(d){ return d.y })
+})
+</script>
 <style>
 	/*
 	 * white: #fff
@@ -94,6 +133,7 @@
 	}
 
 	#charts {
+		display: none;
 		float: left;
 		list-style: none;
 	}
@@ -173,27 +213,12 @@
 			</li>
 		</ul>
 	</aside>
+	<div class="bars"></div>
 	<ul id="charts">
 		<li id="browser-usage">
 			<div class="pie-chart"></div>
 		</li>
 	</ul>
-	<div class="bar-graph">
-		<ul>
-			<li></li>
-			<li></li>
-			<li></li>
-			<li></li>
-			<li></li>
-		</ul>
-		<ul>
-			<li></li>
-			<li></li>
-			<li></li>
-			<li></li>
-			<li></li>
-		</ul>
-	</div>
 	<hr>
 </section>
 <!-- <footer>footer</footer> -->
