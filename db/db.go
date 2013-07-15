@@ -12,7 +12,8 @@ var (
 	l  sync.RWMutex
 	k  = 10
 	fs = []string{"Cookies", "QuickTime", "Shockwave Flash", "Google Talk",
-		"Java Applet", "Silverlight", "Retina Display", "Geolocation"}
+		"Java Applet", "Silverlight", "Retina Display", "Geolocation",
+		"Touch Screen", "Tilt"}
 	ps = []float64{0.5, 0.9, 0.99}
 )
 
