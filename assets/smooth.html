@@ -1,0 +1,81 @@
+<!doctype html>
+<meta charset="utf-8">
+<style>
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #fff;
+}
+
+section {
+  border: 1px solid #eee;
+  margin: 20px;
+  display: inline-block;
+}
+
+path, line {
+  fill: none;
+}
+
+.line {
+  stroke: #ccc;
+  stroke-width: 1px;
+}
+
+</style>
+<section></section>
+<script src="http://d3js.org/d3.v3.js"></script>
+<script>
+data = [
+  { "Timestamp": "2013-07-16T19:05:46Z", "Value": 10 },
+  { "Timestamp": "2013-07-16T19:05:47Z", "Value": 20 },
+  { "Timestamp": "2013-07-16T19:05:48Z", "Value": 25 },
+  { "Timestamp": "2013-07-16T19:05:49Z", "Value": 150 },
+  { "Timestamp": "2013-07-16T19:05:50Z", "Value": 160 },
+  { "Timestamp": "2013-07-16T19:05:51Z", "Value": 170 },
+  { "Timestamp": "2013-07-16T19:05:52Z", "Value": 200 },
+  { "Timestamp": "2013-07-16T19:05:53Z", "Value": 210 },
+  { "Timestamp": "2013-07-16T19:05:54Z", "Value": 220 },
+  { "Timestamp": "2013-07-16T19:05:55Z", "Value": 80  },
+  { "Timestamp": "2013-07-16T19:05:56Z", "Value": 110 },
+  { "Timestamp": "2013-07-16T19:05:57Z", "Value": 140 },
+  { "Timestamp": "2013-07-16T19:05:58Z", "Value": 110 },
+  { "Timestamp": "2013-07-16T19:05:59Z", "Value": 150 }
+]
+
+width = 800
+height = 300
+margin = 20
+
+parseDate = d3.time.format.iso.parse
+
+for(var i=0; i<data.length; i++) {
+  data[i].Timestamp = parseDate(data[i].Timestamp)
+}
+
+x = d3.time.scale().range([0, width])
+y = d3.scale.linear().range([height + margin, margin])
+
+stack = d3.layout.stack().offset("wiggle")
+
+line = d3.svg.line()
+  .x(function(d) { return x(d.Timestamp) })
+  .y(function(d) { return y(d.Value) })
+  .interpolate("cardinal")
+
+svg = d3.select("section").append("svg")
+  .attr("width", width)
+  .attr("height", height + margin)
+  .append("g")
+
+x.domain(d3.extent(data, function(d) { return d.Timestamp }))
+y.domain(d3.extent(data, function(d) { return d.Value }))
+
+svg.append("path")
+  .datum(data)
+  .attr("class", "line")
+  .attr("d", line)
+</script>
