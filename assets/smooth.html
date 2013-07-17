@@ -21,30 +21,44 @@ path, line {
 }
 
 .line {
-  stroke: #ccc;
+  stroke: #ccf;
   stroke-width: 1px;
+}
+
+.axis path,
+.axis line,
+.axis text {
+  display: none;
+}
+
+.tick line {
+  display: block;
+  fill: none;
+  stroke: #eee;
+  shape-rendering: crispEdges;
 }
 
 </style>
 <section></section>
 <script src="http://d3js.org/d3.v3.js"></script>
 <script>
-data = [
-  { "Timestamp": "2013-07-16T19:05:46Z", "Value": 10 },
-  { "Timestamp": "2013-07-16T19:05:47Z", "Value": 20 },
-  { "Timestamp": "2013-07-16T19:05:48Z", "Value": 25 },
-  { "Timestamp": "2013-07-16T19:05:49Z", "Value": 150 },
-  { "Timestamp": "2013-07-16T19:05:50Z", "Value": 160 },
-  { "Timestamp": "2013-07-16T19:05:51Z", "Value": 170 },
-  { "Timestamp": "2013-07-16T19:05:52Z", "Value": 200 },
-  { "Timestamp": "2013-07-16T19:05:53Z", "Value": 210 },
-  { "Timestamp": "2013-07-16T19:05:54Z", "Value": 220 },
-  { "Timestamp": "2013-07-16T19:05:55Z", "Value": 80  },
-  { "Timestamp": "2013-07-16T19:05:56Z", "Value": 110 },
-  { "Timestamp": "2013-07-16T19:05:57Z", "Value": 140 },
-  { "Timestamp": "2013-07-16T19:05:58Z", "Value": 110 },
-  { "Timestamp": "2013-07-16T19:05:59Z", "Value": 150 }
-]
+function getRandomArbitary (min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+data = []
+// { "Timestamp": TIMESTAMP-ISO8601, "Value": INT }
+
+time = new Date
+time.setSeconds(time.getSeconds() - 60)
+
+for(var i=0; i<60; i++) {
+  time.setSeconds(time.getSeconds() + 1)
+  data.push({
+    "Timestamp": time.toISOString(),
+    "Value": getRandomArbitary(10, 20)
+  })
+}
 
 width = 800
 height = 300
@@ -64,18 +78,49 @@ stack = d3.layout.stack().offset("wiggle")
 line = d3.svg.line()
   .x(function(d) { return x(d.Timestamp) })
   .y(function(d) { return y(d.Value) })
-  .interpolate("cardinal")
+  .interpolate("bundle")
+  //.interpolate("cardinal")
 
 svg = d3.select("section").append("svg")
   .attr("width", width)
   .attr("height", height + margin)
-  .append("g")
+
+axis = d3.svg.axis()
+  .scale(x)
+  .orient("bottom")
+  .ticks(5)
+  .tickSize(-height, 0, 0)
+  .tickFormat("")
 
 x.domain(d3.extent(data, function(d) { return d.Timestamp }))
-y.domain(d3.extent(data, function(d) { return d.Value }))
+y.domain([0, 20])
 
 svg.append("path")
   .datum(data)
   .attr("class", "line")
   .attr("d", line)
+
+svg.append("g")
+  .attr("class", "x axis")
+  .attr("transform", "translate(0," + height + ")")
+  .call(axis)
+
+function animate() {
+  x.domain(d3.extent(data, function(d) { return d.Timestamp }))
+
+  d3.select("path").transition()
+    .duration(1000)
+    .attr("d", line)
+
+  data.shift()
+  data.push({
+    "Timestamp": (new Date),
+    "Value": getRandomArbitary(10, 20)
+  })
+
+  console.debug({ size: data.length, last: data[data.length - 1] })
+  setTimeout(animate, 1000)
+}
+
+animate()
 </script>
