@@ -57,8 +57,9 @@ parse = d3.time.format.iso.parse
 for(var i=0; i<60; i++) {
   time.setSeconds(time.getSeconds() - 1)
   traffic.unshift({ "x": parse(time.toISOString()), "y": getRandomArbitary(10, 12) })
-  // x: Timestamp
-  // y: Value
+  /* x: Timestamp
+   * y: Value
+   */
 }
 
 Gasoline = {}
@@ -103,13 +104,20 @@ Gasoline.Graph = function(p, options) {
 
   if(options.live) {
     function animate() {
+      /* if a chrome tab is not in focus the rendering stacks and
+       * the graph looks very wrong. remove any item that is older
+       * than 60 seconds
+       */
+      while(data.length > 60) {
+        data.shift()
+      }
+
       x.domain(d3.extent(data, function(d) { return d.x }))
 
       d3.select("path").transition()
         .duration(1000)
         .attr("d", line)
 
-      data.shift()
       data.push({
         "x": (new Date).setMilliseconds(0),
         "y": getRandomArbitary(10, 12)
