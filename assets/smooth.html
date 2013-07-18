@@ -21,8 +21,11 @@ path, line {
 }
 
 .line {
-  stroke: #ccf;
   stroke-width: 1px;
+}
+
+.total {
+  stroke: #ccf;
 }
 
 .axis path,
@@ -46,80 +49,88 @@ function getRandomArbitary (min, max) {
   return Math.random() * (max - min) + min;
 }
 
-data = []
-// { "Timestamp": TIMESTAMP-ISO8601, "Value": INT }
-
+traffic = []
 time = new Date
-time.setSeconds(time.getSeconds() - 60)
+time.setMilliseconds(0)
+parse = d3.time.format.iso.parse
 
 for(var i=0; i<60; i++) {
-  time.setSeconds(time.getSeconds() + 1)
-  data.push({
-    "Timestamp": time.toISOString(),
-    "Value": getRandomArbitary(10, 20)
-  })
+  time.setSeconds(time.getSeconds() - 1)
+  traffic.unshift({ "x": parse(time.toISOString()), "y": getRandomArbitary(10, 12) })
+  // x: Timestamp
+  // y: Value
 }
 
-width = 800
-height = 200
-margin = 20
+Gasoline = {}
+Gasoline.Graph = function(p, options) {
+  var data   = options.data,
+      width  = options.width,
+      height = options.height,
+      margin = options.margin || 0
 
-parseDate = d3.time.format.iso.parse
+  var x = d3.time.scale().range([0, width]),
+      y = d3.scale.linear().range([height + margin, margin]),
+      stack = d3.layout.stack().offset("wiggle")
 
-for(var i=0; i<data.length; i++) {
-  data[i].Timestamp = parseDate(data[i].Timestamp)
-}
+  var line = d3.svg.line()
+    .x(function(d) { return x(d.x) })
+    .y(function(d) { return y(d.y) })
+    .interpolate("monotone")
 
-x = d3.time.scale().range([0, width])
-y = d3.scale.linear().range([height + margin, margin])
+  var svg = d3.select(p).append("svg")
+    .attr("width", width)
+    .attr("height", height + margin)
 
-stack = d3.layout.stack().offset("wiggle")
+  var axis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom")
+    .ticks(data.length / 3)
+    .tickSize(-height, 0, 0)
+    .tickFormat("")
 
-line = d3.svg.line()
-  .x(function(d) { return x(d.Timestamp) })
-  .y(function(d) { return y(d.Value) })
-  .interpolate("cardinal")
+  x.domain(d3.extent(data, function(d) { return d.x }))
+  y.domain([0, 20])
 
-svg = d3.select("section").append("svg")
-  .attr("width", width)
-  .attr("height", height + margin)
-
-axis = d3.svg.axis()
-  .scale(x)
-  .orient("bottom")
-  .ticks(data.length / 3)
-  .tickSize(-height, 0, 0)
-  .tickFormat("")
-
-x.domain(d3.extent(data, function(d) { return d.Timestamp }))
-y.domain([0, 20])
-
-svg.append("path")
-  .datum(data)
-  .attr("class", "line")
-  .attr("d", line)
-
-svg.append("g")
-  .attr("class", "x axis")
-  .attr("transform", "translate(0," + height + ")")
-  .call(axis)
-
-function animate() {
-  x.domain(d3.extent(data, function(d) { return d.Timestamp }))
-
-  d3.select("path").transition()
-    .duration(0)
+  svg.append("path")
+    .datum(data)
+    .attr("class", "line total")
     .attr("d", line)
 
-  data.shift()
-  data.push({
-    "Timestamp": (new Date),
-    "Value": getRandomArbitary(10, 20)
-  })
+  svg.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(axis)
 
-  console.debug({ size: data.length, last: data[data.length - 1] })
-  setTimeout(animate, 1000)
+  if(options.live) {
+    function animate() {
+      x.domain(d3.extent(data, function(d) { return d.x }))
+
+      d3.select("path").transition()
+        .duration(1000)
+        .attr("d", line)
+
+      data.shift()
+      data.push({
+        "x": (new Date).setMilliseconds(0),
+        "y": getRandomArbitary(10, 12)
+      })
+
+      setTimeout(animate, 1000)
+    }
+
+    animate()
+  }
 }
 
-animate()
+// *********************************
+
+// my interface
+new Gasoline.Graph("section", {
+  width: 800,
+  height: 200,
+  margin: 20,
+  name: "traffic",
+  data: traffic,
+  live: true // update every second
+})
 </script>
