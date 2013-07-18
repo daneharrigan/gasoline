@@ -34,7 +34,7 @@ path, line {
 .tick line {
   display: block;
   fill: none;
-  stroke: #eee;
+  stroke: rgba(0, 0, 0, .05);
   shape-rendering: crispEdges;
 }
 
@@ -61,7 +61,7 @@ for(var i=0; i<60; i++) {
 }
 
 width = 800
-height = 300
+height = 200
 margin = 20
 
 parseDate = d3.time.format.iso.parse
@@ -78,8 +78,7 @@ stack = d3.layout.stack().offset("wiggle")
 line = d3.svg.line()
   .x(function(d) { return x(d.Timestamp) })
   .y(function(d) { return y(d.Value) })
-  .interpolate("bundle")
-  //.interpolate("cardinal")
+  .interpolate("cardinal")
 
 svg = d3.select("section").append("svg")
   .attr("width", width)
@@ -88,7 +87,7 @@ svg = d3.select("section").append("svg")
 axis = d3.svg.axis()
   .scale(x)
   .orient("bottom")
-  .ticks(5)
+  .ticks(data.length / 3)
   .tickSize(-height, 0, 0)
   .tickFormat("")
 
@@ -109,7 +108,7 @@ function animate() {
   x.domain(d3.extent(data, function(d) { return d.Timestamp }))
 
   d3.select("path").transition()
-    .duration(1000)
+    .duration(0)
     .attr("d", line)
 
   data.shift()
