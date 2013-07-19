@@ -73,7 +73,8 @@ h1 {
 
 #left li h3 {
 	font-size: 14px;
-	font-weight: normal;
+	font-weight: bold;
+	-webkit-font-smoothing: antialiased;
 	margin-bottom: 5px;
 }
 
