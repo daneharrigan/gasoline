@@ -1,171 +1,23 @@
 <!doctype html>
+<link rel="stylesheet" type="text/css" href="/assets/gasoline.css">
 <script src="/assets/d3.v3.min.js"></script>
+<script src="/assets/gasoline.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function(){
-	var data = [
-		{ "x": 10, "y": 5  },
-		{ "x": 20, "y": 10 },
-		{ "x": 30, "y": 15 },
-		{ "x": 40, "y": 20 },
-		{ "x": 50, "y": 25 }
-	]
+	var c = document.querySelector("#content"),
+	    l = document.querySelector("#left"),
+	    width = (c.offsetWidth - l.offsetWidth) - 140
 
-	var width  = 600,
-	    height = 300,
-	    wBar   = 40,
-	    svg    = d3.select("div.bars").append("svg")
-
-	var x = d3.scale.ordinal()
-	    .domain(d3.range(5))
-	    .rangeRoundBands([0, width], .08)
-
-	svg
-	  .attr("height", height)
-	  .attr("width", width)
-
-	var layer = svg.selectAll(".layer")
-	    .data(data)
-	  .enter().append("g")
-	    .attr("class", "layer")
-	    .attr("style", "fill: blue")
-
-	layer.selectAll("rect")
-	    .data(data)
-	  .enter().append("rect")
-	    .attr("x", function(d, i){ return x(d.x) })
-	    .attr("y", function(d){ return height - d.y })
-	    .attr("width", wBar)
-	    .attr("height", function(d){ return d.y })
+	new Gasoline.Graph("section#live", {
+		width: width,
+		height: 100,
+		margin: 15,
+		name: "traffic",
+		data: traffic,
+		live: true // update every second
+	})
 })
 </script>
-<style>
-	/*
-	 * white: #fff
-	 * dark blue: #026BB5
-	 * light blue: #00AAE3
-	 * orange: #FF7729
-	 * grey: #474747
-	 * https://kuler.adobe.com/SMK-LINK-COLORS-color-theme-2583283/edit/?copy=true&base=2&rule=Custom&selected=4&name=Copy%20of%20SMK-LINK%20COLORS&mode=rgb&rgbvalues=1,1,1,0.00784313725490196,0.4196078431372549,0.7098039215686275,0,0.6666666666666666,0.8901960784313725,1,0.4666666666666667,0.1607843137254902,0.2784313725490196,0.2784313725490196,0.2784313725490196
-	 */
-
-	* {
-		padding: 0;
-		margin: 0;
-	}
-
-	body {
-		font: 16px/18px "Helvetica Neue", Helvetica, Arial, sans-serif;
-		background: #eee;
-		color: #666;
-	}
-
-	hr {
-		border: none;
-		border-bottom: 1px solid #eee;
-		clear: both;
-		margin: 20px 0;
-	}
-
-	header, #content {
-		background: #fff;
-		padding: 20px 40px;
-	}
-
-	header {
-		padding-bottom: 0;
-	}
-
-	header hgroup {
-		padding: 0 0 20px 0;
-		border-bottom: 1px solid #eee;
-	}
-
-	h1, h2 {
-		font-size: 18px;
-		font-weight: normal;
-		display: inline;
-	}
-
-	h1 {
-		color: #ccc;
-	}
-
-	#left {
-		width: 300px;
-		height: 100%;
-		border-right: 1px solid #eee;
-		padding-right: 40px;
-		margin-right: 40px;
-		margin-bottom: 20px;
-		float: left;
-	}
-
-	#left li {
-		list-style: none;
-		padding: 10px 0;
-		border-top: 1px solid #eee;
-	}
-
-	#left li:first-child {
-		padding-top: 0;
-		border-top: none;
-	}
-
-	#left li h3 {
-		font-size: 14px;
-		font-weight: normal;
-		margin-bottom: 5px;
-	}
-
-	#left li span {
-		font-size: 24px;
-		color: #00aae3;
-		display: block;
-	}
-
-	#left #frequented-pages {
-		border-top-width: 3px;
-		font-size: 12px;
-	}
-
-	#left #frequented-pages span {
-		font-size: 18px;
-	}
-
-	#charts {
-		display: none;
-		float: left;
-		list-style: none;
-	}
-
-	#charts .pie-chart {
-		background: #026BB5;
-		width: 300px;
-		height: 300px;
-		border-radius: 300px;
-	}
-
-	.bar-graph {
-		float: left;
-		width: 400px;
-		border: 1px solid red;
-		margin-left: 20px;
-		position: relative;
-		height: 200px;
-	}
-
-	.bar-graph ul {
-		width: 30px;
-		margin-right: 5px;
-		float: left;
-		height: 100%;
-	}
-
-	.bar-graph li {
-		border: 1px solid blue;
-		overflow: hidden;
-	}
-</style>
 <header>
 	<hgroup>
 		<h1>gasoline</h1>
@@ -213,12 +65,7 @@ document.addEventListener("DOMContentLoaded", function(){
 			</li>
 		</ul>
 	</aside>
-	<div class="bars"></div>
-	<ul id="charts">
-		<li id="browser-usage">
-			<div class="pie-chart"></div>
-		</li>
-	</ul>
+	<section id="live"></section>
 	<hr>
 </section>
 <!-- <footer>footer</footer> -->

@@ -1,56 +1,4 @@
-<!doctype html>
-<meta charset="utf-8">
-<style>
-* {
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  background: #fff;
-}
-
-section {
-  border: 1px solid #eee;
-  margin: 20px;
-  display: inline-block;
-}
-
-path, line {
-  fill: none;
-}
-
-.line {
-  stroke-width: 1px;
-}
-
-.total {
-  stroke: #ccf;
-}
-
-.axis path,
-.axis line {
-  display: none;
-}
-
-.tick line {
-  display: block;
-  fill: none;
-  stroke: rgba(0, 0, 0, .05);
-  shape-rendering: crispEdges;
-}
-
-.tick text {
-	font: 11px "Helvetica Neue", Helvetica, Arial, sans-serif;
-	fill: #ccc;
-	position: relative;
-	top: 5px;
-}
-
-</style>
-<section></section>
-<script src="http://d3js.org/d3.v3.js"></script>
-<script>
+// temporary: start
 function range(min, max) {
   return Math.random() * (max - min) + min;
 }
@@ -68,6 +16,8 @@ for(var i=0; i<60; i++) {
    * y: Value
    */
 }
+
+// temporary: end
 
 Gasoline = {}
 Gasoline.Graph = function(p, options) {
@@ -124,6 +74,10 @@ Gasoline.Graph = function(p, options) {
         .duration(1000)
         .attr("d", line)
 
+      d3.select("g").transition()
+        .duration(1000)
+	.call(axis)
+
       data.push({
         "x": (new Date).setMilliseconds(0),
         "y": range(10, 12)
@@ -136,15 +90,3 @@ Gasoline.Graph = function(p, options) {
   }
 }
 
-// *********************************
-
-// my interface
-new Gasoline.Graph("section", {
-  width: 800,
-  height: 200,
-  margin: 15,
-  name: "traffic",
-  data: traffic,
-  live: true // update every second
-})
-</script>
