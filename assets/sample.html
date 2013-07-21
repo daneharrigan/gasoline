@@ -4,6 +4,21 @@
 <script src="/assets/gasoline.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function(){
+	data = { total: [] }
+	time = new Date
+	time.setMilliseconds(0)
+
+	parse = d3.time.format.iso.parse
+
+	for(var i=0; i<60; i++) {
+		time.setSeconds(time.getSeconds() - 1)
+		data.total.unshift({ "x": parse(time.toISOString()), "y": range(10, 12) })
+		/* x: Timestamp
+		* y: Value
+		*/
+	}
+
+
 	var c = document.querySelector("#content"),
 	    l = document.querySelector("#left"),
 	    width = (c.offsetWidth - l.offsetWidth) - 140
@@ -13,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function(){
 		height: 100,
 		margin: 15,
 		name: "traffic",
-		data: traffic,
+		data: data,
 		live: true // update every second
 	})
 })

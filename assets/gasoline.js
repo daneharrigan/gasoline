@@ -3,20 +3,6 @@ function range(min, max) {
   return Math.random() * (max - min) + min;
 }
 
-traffic = []
-time = new Date
-time.setMilliseconds(0)
-
-parse = d3.time.format.iso.parse
-
-for(var i=0; i<60; i++) {
-  time.setSeconds(time.getSeconds() - 1)
-  traffic.unshift({ "x": parse(time.toISOString()), "y": range(10, 12) })
-  /* x: Timestamp
-   * y: Value
-   */
-}
-
 // temporary: end
 
 Gasoline = {}
@@ -42,7 +28,7 @@ Gasoline.Graph = function(p, options) {
   var axis = d3.svg.axis()
     .scale(x)
     .orient("bottom")
-    .ticks(data.length / 6)
+    .ticks(10)
     .tickSize(-height, 0, 0)
 
   x.domain(d3.extent(data, function(d) { return d.x }))
