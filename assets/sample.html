@@ -4,33 +4,70 @@
 <script src="/assets/gasoline.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function(){
-	data = { total: [] }
+	Gasoline.DB.Lines = []
+
+	// temporary: start
+
+	Gasoline.DB.PageViews = Gasoline.format.number(1000000)
+	Gasoline.DB.UniqueVisitors = Gasoline.format.number(150000)
+	Gasoline.DB.ReturningVisitors = Gasoline.format.number(850000)
+	Gasoline.DB.Visits = Gasoline.format.number(980000)
+
 	time = new Date
 	time.setMilliseconds(0)
 
-	parse = d3.time.format.iso.parse
+	total = []
+	unique = []
+	returning = []
 
 	for(var i=0; i<60; i++) {
 		time.setSeconds(time.getSeconds() - 1)
-		data.total.unshift({ "x": parse(time.toISOString()), "y": range(10, 12) })
-		/* x: Timestamp
-		* y: Value
-		*/
+
+		var d = time.toISOString()
+		total.unshift({ Timestamp: d, Value: 15 })
+		unique.unshift({ Timestamp: d, Value: 5 })
+		returning.unshift({ Timestamp: d, Value: 10 })
 	}
 
+	Gasoline.DB.Lines.push({ Name: "total", Value: total })
+	Gasoline.DB.Lines.push({ Name: "unique", Value: unique })
+	Gasoline.DB.Lines.push({ Name: "returning", Value: returning })
 
-	var c = document.querySelector("#content"),
-	    l = document.querySelector("#left"),
-	    width = (c.offsetWidth - l.offsetWidth) - 140
+	function appendDate() {
+		var d = new Date
+
+		d.setMilliseconds(0)
+		var s = d.toISOString()
+
+		Gasoline.DB.Lines[0].Value.push({ Timestamp: s, Value: 10 })
+		Gasoline.DB.Lines[1].Value.push({ Timestamp: s, Value: 7 })
+		Gasoline.DB.Lines[2].Value.push({ Timestamp: s, Value: 3 })
+
+		setTimeout(appendDate, 1000)
+	}
+
+	appendDate()
+
+	// temporary: end
+
+	var
+	c = document.querySelector("#content"),
+	l = document.querySelector("#left"),
+	width = (c.offsetWidth - l.offsetWidth) - 140
 
 	new Gasoline.Graph("section#live", {
 		width: width,
 		height: 100,
 		margin: 15,
 		name: "traffic",
-		data: data,
-		live: true // update every second
+		data: Gasoline.DB.Lines,
+		update: true // update every second
 	})
+
+	new Gasoline.Value("#page-views",{ value: Gasoline.DB.PageViews, update: true })
+	new Gasoline.Value("#unique-visitors", { value: Gasoline.DB.UniqueVisitors, update: true })
+	new Gasoline.Value("#returning-visitors", { value: Gasoline.DB.ReturningVisitors, update: true })
+	new Gasoline.Value("#visits", { value: Gasoline.DB.Visits, update: true })
 })
 </script>
 <header>
@@ -44,19 +81,19 @@ document.addEventListener("DOMContentLoaded", function(){
 		<ul>
 			<li>
 				<h3>Page Views</h3>
-				<span>1,000,000</span>
+				<span id="page-views">1,000,000</span>
 			</li>
 			<li>
 				<h3>Unique Visitors</h3>
-				<span>150,000</span>
+				<span id="unique-visitors">150,000</span>
 			</li>
 			<li>
 				<h3>Returning Visitors</h3>
-				<span>850,000</span>
+				<span id="returning-visitors">850,000</span>
 			</li>
 			<li>
 				<h3>Visits</h3>
-				<span>980,000</span>
+				<span id="visits">980,000</span>
 			</li>
 			<li id="frequented-pages">
 				<h3>Frequented Pages</h3>

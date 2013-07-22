@@ -1,78 +1,152 @@
-// temporary: start
-function range(min, max) {
-  return Math.random() * (max - min) + min;
-}
-
-// temporary: end
-
 Gasoline = {}
+Gasoline.DB = {}
 Gasoline.Graph = function(p, options) {
-  var data   = options.data,
-      width  = options.width,
-      height = options.height,
-      margin = options.margin || 0
+	var
+	data   = options.data,
+	width  = options.width,
+	height = options.height,
+	margin = options.margin || 0,
+	parse = d3.time.format.iso.parse
 
-  var x = d3.time.scale().range([0, width]),
-      y = d3.scale.linear().range([height + margin, margin]),
-      stack = d3.layout.stack().offset("wiggle")
+	var
+	x = d3.time.scale().range([0, width]),
+	y = d3.scale.linear().range([height + margin, margin]),
+	stack = d3.layout.stack().offset("wiggle")
 
-  var line = d3.svg.line()
-    .x(function(d) { return x(d.x) })
-    .y(function(d) { return y(d.y) })
-    .interpolate("monotone")
+	var
+	line = d3.svg.line()
+		.x(function(d) { return x(parse(d.Timestamp)) })
+		.y(function(d) { return y(d.Value) })
+		.interpolate("monotone")
 
-  var svg = d3.select(p).append("svg")
-    .attr("width", width)
-    .attr("height", height + margin)
+	var
+	svg = d3.select(p).append("svg")
+		.attr("width", width)
+		.attr("height", height + margin)
 
-  var axis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom")
-    .ticks(10)
-    .tickSize(-height, 0, 0)
+	var
+	axis = d3.svg.axis()
+		.scale(x)
+		.orient("bottom")
+		.ticks(10)
+		.tickSize(-height, 0, 0)
 
-  x.domain(d3.extent(data, function(d) { return d.x }))
-  y.domain([0, 20])
+	function domains() {
+		var
+		dxMin,
+		dxMax,
+		dyMin = 0,
+		dyMax = 0
 
-  svg.append("path")
-    .datum(data)
-    .attr("class", "line total")
-    .attr("d", line)
+		for(var i=0; i<data.length; i++) {
+			var
+			n = data[i].Value.length - 1,
+			xMin = parse(data[i].Value[n].Timestamp),
+			xMax = parse(data[i].Value[0].Timestamp),
+			yMax = data[i].Value[0].Value
 
-  svg.append("g")
-    .attr("class", "x axis")
-    .attr("transform", "translate(0," + height + ")")
-    .call(axis)
+			if(!dxMin || !dxMax) {
+				dxMin = xMin
+				dxMax = xMax
+			}
 
-  if(options.live) {
-    function animate() {
-      /* if a chrome tab is not in focus the rendering stacks and
-       * the graph looks very wrong. remove any item that is older
-       * than 60 seconds
-       */
-      while(data.length > 60) {
-        data.shift()
-      }
+			if(xMin < dxMin) {
+				dxMin = xMin
+			}
 
-      x.domain(d3.extent(data, function(d) { return d.x }))
+			if(xMax > dxMax) {
+				dxMax = xMax
+			}
 
-      d3.select("path").transition()
-        .duration(1000)
-        .attr("d", line)
+			if(yMax > dyMax) {
+				dyMax = yMax
+			}
+		}
 
-      d3.select("g").transition()
-        .duration(1000)
-	.call(axis)
+		x.domain([dxMax, dxMin])
+		y.domain([dyMin, dyMax])
+	}
 
-      data.push({
-        "x": (new Date).setMilliseconds(0),
-        "y": range(10, 12)
-      })
+	// add lines
+	domains()
+	svg.selectAll(".line")
+		.data(data)
+		.enter().append("path")
+		.attr("class", function(d) { return d.Name + " line" })
+		.attr("d", function(d) { return line(d.Value) })
 
-      setTimeout(animate, 1000)
-    }
+	svg.append("g")
+		.attr("class", "x axis")
+		.attr("transform", "translate(0," + height + ")")
+		.call(axis)
 
-    animate()
-  }
+	// animate
+	function update() {
+		/* if a chrome tab is not in focus the rendering stacks and
+		 * the graph looks very wrong. remove any item that is older
+		 * than 60 seconds
+		 */
+
+		for(var i=0; i<data.length; i++) {
+			while(data[i].Value.length > 60) {
+				data[i].Value.shift()
+			}
+		}
+
+		domains()
+		d3.selectAll(".line").transition()
+			.duration(1000)
+			.attr("d", function(d) { return line(d.Value) })
+
+		d3.select("g").transition()
+			.duration(1000)
+			.call(axis)
+
+		setTimeout(update, 1000)
+	}
+
+	if(options.update) {
+		update()
+	}
 }
 
+Gasoline.Value = function(p, options) {
+	var el = document.querySelector(p)
+
+	function update() {
+		if(!el.innerText || options.value != el.innerText) {
+			el.innerText = options.value
+		}
+
+		if(options.update) {
+			setTimeout(update, 1000)
+		}
+	}
+
+	update()
+}
+
+Gasoline.format = {
+	number: function(n) {
+		var
+		s = n.toString(),
+		v = "",
+		i = s.length
+
+		while(i > 3) {
+			var x = i - 3
+			v = s.substring(x, i) + v
+			i = x
+
+			if(i > 0) {
+				v = "," + v
+			}
+		}
+
+		if(i > 0) {
+			v = s.substring(0, i) + v
+		}
+
+		return v
+	}
+}

@@ -107,8 +107,15 @@ h1 {
 }
 
 #live .total {
-	stroke: #ccf;
 	stroke: #00aae3;
+}
+
+#live .unique {
+	stroke: #00e3e3;
+}
+
+#live .returning {
+	stroke: #aaaae3;
 }
 
 #live .axis path,
