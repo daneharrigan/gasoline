@@ -31,20 +31,20 @@ Gasoline.Graph = function(p, options) {
 		.ticks(10)
 		.tickSize(-height, 0, 0)
 
-  /*
 	var
   legend = svg.selectAll(".legend")
-  .data(color.domain().slice().reverse())
+  .data(data)
   .enter().append("g")
     .attr("class", "legend")
-    .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+    .attr("transform", function(d, i) { return "translate(" + 20 * i + ", 0)"; });
 
-	legend.append("rect")
-		.attr("x", width - 18)
-		.attr("width", 18)
-		.attr("height", 18)
+	legend.append("circle")
+		.attr("cx", width - 200)
+    .attr("cy", height + margin)
+    .attr("r", 4)
 		//.style("fill", color);
 
+  /*
 	legend.append("text")
 		.attr("x", width - 24)
 		.attr("y", 9)
@@ -92,7 +92,7 @@ Gasoline.Graph = function(p, options) {
 
 	// add lines
 	domains()
-	svg.selectAll(".line")
+	svg.selectAll("path.line")
 		.data(data)
 		.enter().append("path")
 		.attr("class", function(d) { return d.Name + " line" })
@@ -117,11 +117,11 @@ Gasoline.Graph = function(p, options) {
 		}
 
 		domains()
-		d3.selectAll(".line").transition()
+		d3.selectAll("path.line").transition()
 			.duration(1000)
 			.attr("d", function(d) { return line(d.Value) })
 
-		d3.select("g").transition()
+		d3.select("g.axis").transition()
 			.duration(1000)
 			.call(axis)
 
