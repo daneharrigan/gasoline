@@ -2,11 +2,11 @@ Gasoline = {}
 Gasoline.DB = {}
 Gasoline.Graph = function(p, options) {
 	var
-	data   = options.data,
-	width  = options.width,
+	data	 = options.data,
+	width	= options.width,
 	height = options.height,
 	margin = options.margin || 0,
-	parse = d3.time.format.iso.parse
+	parse	= d3.time.format.iso.parse
 
 	var
 	x = d3.time.scale().range([0, width]),
@@ -30,6 +30,29 @@ Gasoline.Graph = function(p, options) {
 		.orient("bottom")
 		.ticks(10)
 		.tickSize(-height, 0, 0)
+
+  /*
+	var
+  legend = svg.selectAll(".legend")
+  .data(color.domain().slice().reverse())
+  .enter().append("g")
+    .attr("class", "legend")
+    .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+	legend.append("rect")
+		.attr("x", width - 18)
+		.attr("width", 18)
+		.attr("height", 18)
+		//.style("fill", color);
+
+	legend.append("text")
+		.attr("x", width - 24)
+		.attr("y", 9)
+		.attr("dy", ".35em")
+		.style("text-anchor", "end")
+		.text(function(d) { return d; });
+  */
+
 
 	function domains() {
 		var
