@@ -1,0 +1,66 @@
+<!doctype html>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  padding: 40px;
+}
+
+svg {
+  border: 1px solid #eee;
+}
+
+path.line {
+  stroke: #aae;
+  fill: none;
+}
+</style>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+var Data = []
+
+t = new Date
+t.setMilliseconds(0)
+t.setSeconds(0)
+parse = d3.time.format.iso.parse
+
+for(var i=0;i<60; i++) {
+  var n = (i % 2) ? 10 : 15
+  t.setSeconds(i)
+  Data.push({ Timestamp: parse(t.toISOString()), Count: n })
+}
+
+////////////////////////////////////////////////////////////
+
+svg = d3.select("body").append("svg")
+  .attr("width", 800)
+  .attr("height", 200)
+
+x = d3.time.scale().range([0, 800])
+y = d3.scale.linear().range([200, 0])
+
+x.domain(d3.extent(Data, function(d) { return d.Timestamp }))
+y.domain(d3.extent(Data, function(d) { return d.Count }))
+
+line = d3.svg.line()
+  .x(function(d) { return x(d.Timestamp) })
+  .y(function(d) { return y(d.Count) })
+  .interpolate("monotone")
+
+/*
+axis = d3.svg.axis()
+  .scale(x)
+  .orient("bottom")
+  .tick(10)
+  .tickSize(-200, 0, 0)
+*/
+
+svg.append("path")
+  .datum(Data)
+  .attr("class", "line")
+  .attr("d", line)
+</script>

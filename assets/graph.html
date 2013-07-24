@@ -1,0 +1,127 @@
+<!doctype html>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+}
+
+path, line {
+  display: none;
+}
+
+path {
+  stroke: #000;
+	fill: none;
+	stroke-width: 1px;
+}
+</style>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+var Data = [
+  { Name: "Unique", Value: [] },
+  { Name: "Returning", Value: [] }
+]
+
+function seed() {
+  var parse = d3.time.format.iso.parse
+
+  for(var z=0; z<60; z++) {
+    var
+    t = new Date
+    t.setMilliseconds(0)
+    t.setSeconds(t.getSeconds() - (60 - z))
+
+    for(var i=0; i<2; i++) {
+      var
+      c = (t.getSeconds() % 2) ? 10 : 15,
+      v = { Timestamp: parse(t.toISOString()), Count: c }
+
+      Data[i].Value.push(v)
+    }
+
+    if(!Data[2]) {
+      Data[2] = { Name: "Total", Value: [] }
+    }
+
+    var
+    n = Data[0].Value.length - 1,
+    sum = Data[0].Value[n].Count + Data[1].Value[n].Count
+
+    Data[2].Value.push({ Timestamp: t, Count: sum })
+  }
+
+  //setTimeout(seed, 1000)
+}
+
+seed()
+
+/**************************/
+
+function Graph(q, options) {
+  var
+  m = options.margin,
+  h = options.height,
+  w = options.width,
+  d = options.data
+
+  var
+  svg = d3.select(q).append("svg")
+    .attr("height", h)
+    .attr("width", w)
+
+  var
+  x = d3.time.scale().range([0, w]),
+  y = d3.scale.linear().range([h, m])
+
+  x.domain([0, 15])
+  y.domain([
+    d3.max(Data, function(d) { return d3.max(d.Value, function(v) { return v.Count }) }),
+    d3.min(Data, function(d) { return d3.min(d.Value, function(v) { return v.Count }) })
+  ])
+
+  var
+  line = d3.svg.line()
+    .x(function(d) { return x(d.Timestamp) })
+    .y(function(d) { return y(d.Count) })
+    .interpolate("monotone")
+
+  var
+  lines = svg.append("g")
+    .attr("class", "lines")
+
+  lines.selectAll("path.line")
+    .data(d)
+    .enter().append("path")
+    .attr("class", "line")
+    .attr("d", function(d) { return line(d.Value) })
+
+  /*
+  var
+  axis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom")
+    .tick(10)
+    .tickSize(-h, 0, 0)
+  */
+
+  /*
+  svg.append("g")
+    .attr("class", "axis")
+    .attr("transform", "translate(0, " + h + ")")
+    .call(axis)
+  */
+}
+
+/**************************/
+
+new Graph("body", {
+  name: "traffic",
+  height: 200,
+  width: 800,
+  margin: 20,
+  data: Data,
+  legend: true,
+  update: true
+})
+</script>
