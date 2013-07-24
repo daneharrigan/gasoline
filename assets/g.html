@@ -54,8 +54,8 @@ svg = d3.select("body").append("svg")
 	.attr("width", 800)
 	.attr("height", 200)
 
-x = d3.time.scale().range([10, 790])
-y = d3.scale.linear().range([150, 10]) // reduce height with margin
+x = d3.time.scale().range([0, 800])
+y = d3.scale.linear().range([155, 0]) // reduce height with margin
 
 x.domain(d3.extent(Data, function(d) { return d.Timestamp }))
 y.domain(d3.extent(Data, function(d) { return d.Count }))
@@ -70,13 +70,13 @@ lines = svg.append("g")
 
 legend = svg.append("g")
 	.attr("class", "legend")
-	.attr("transform", "translate(10, 190)")
+	.attr("transform", "translate(4, 195)")
 
 axis = d3.svg.axis()
 	.scale(x)
 	.orient("bottom")
 	.ticks(10)
-	.tickSize(-145, 0, 0)
+	.tickSize(-160, 0, 0)
 
 lines.append("path")
 	.datum(Data)
@@ -105,7 +105,7 @@ legend.append("text")
 
 svg.append("g")
 	.attr("class", "axis")
-	.attr("transform", "translate(0, 155)")
+	.attr("transform", "translate(0, 160)")
 	.call(axis)
 
 
