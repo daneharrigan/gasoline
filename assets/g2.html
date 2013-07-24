@@ -1,0 +1,121 @@
+<!doctype html>
+<style>
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	padding: 40px;
+}
+
+svg {
+	border: 1px solid #eee;
+}
+
+svg text {
+	font: 11px "Helvetica Neue", Helvetica;
+	fill: #ccc;
+}
+
+path.line {
+	stroke: #aae;
+	fill: none;
+}
+
+g.axis line {
+	stroke: rgba(0, 0, 0, .05);
+	stroke-width: 1px;
+}
+
+g.legend circle.total {
+	fill: #aae;
+}
+</style>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+var Data = []
+
+t = new Date
+t.setMilliseconds(0)
+t.setSeconds(0)
+parse = d3.time.format.iso.parse
+
+total = []
+unique = []
+for(var i=0;i<60; i++) {
+	var
+  n = (i % 2) ? 10 : 15
+  n2 = (i % 2) ? 5 : 7
+
+	t.setSeconds(i)
+	total.push({ Timestamp: parse(t.toISOString()), Count: n })
+	unique.push({ Timestamp: parse(t.toISOString()), Count: n2 })
+}
+
+Data.push({ Name: "Page Views", class: "total", Values: total })
+Data.push({ Name: "Uniqe Views", class: "unique", Values: unique })
+
+////////////////////////////////////////////////////////////
+
+svg = d3.select("body").append("svg")
+	.attr("width", 800)
+	.attr("height", 200)
+
+x = d3.time.scale().range([0, 800])
+y = d3.scale.linear().range([155, 0]) // reduce height with margin
+
+// this does not work yet
+x.domain(d3.extent(Data.map(function(d) { return d.Values }), function(d) { return d.Timestamp }))
+y.domain(d3.extent(Data.map(function(d) { return d.Values }), function(d) { return d.Count }))
+
+line = d3.svg.line()
+	.x(function(d) { return x(d.Timestamp) })
+	.y(function(d) { return y(d.Count) })
+	.interpolate("monotone")
+
+lines = svg.append("g")
+	.attr("class", "lines")
+
+legend = svg.append("g")
+	.attr("class", "legend")
+	.attr("transform", "translate(4, 195)")
+
+axis = d3.svg.axis()
+	.scale(x)
+	.orient("bottom")
+	.ticks(10)
+	.tickSize(-160, 0, 0)
+
+lines.selectAll("path.line")
+	.data(Data)
+  .enter().append("path")
+	.attr("class", "line")
+	.attr("d", function(d) { return line(d.Values) })
+
+legend.append("circle")
+	.attr("class", "color total")
+	.attr("r", 4)
+	.attr("cy", -4)
+	.attr("cx", 0)
+
+legend.append("circle")
+	.attr("class", "color unique")
+	.attr("r", 4)
+	.attr("cy", -4)
+	.attr("cx", 90)
+
+legend.append("text")
+	.text("Page Views")
+	.attr("x", 10)
+
+legend.append("text")
+	.text("Unique Visitors")
+	.attr("x", 100)
+
+svg.append("g")
+	.attr("class", "axis")
+	.attr("transform", "translate(0, 160)")
+	.call(axis)
+</script>
