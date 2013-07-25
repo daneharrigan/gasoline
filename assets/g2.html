@@ -19,8 +19,23 @@ svg text {
 }
 
 path.line {
-	stroke: #aae;
 	fill: none;
+}
+
+path.total {
+	stroke: #99e;
+}
+
+path.unique {
+  stroke: #9e9;
+}
+
+circle.total {
+  fill: #99e;
+}
+
+circle.unique {
+  fill: #9e9;
 }
 
 g.axis line {
@@ -54,8 +69,8 @@ for(var i=0;i<60; i++) {
 	unique.push({ Timestamp: parse(t.toISOString()), Count: n2 })
 }
 
-Data.push({ Name: "Page Views", class: "total", Values: total })
-Data.push({ Name: "Uniqe Views", class: "unique", Values: unique })
+Data.push({ Name: "Page Views", Class: "total", Values: total })
+Data.push({ Name: "Uniqe Views", Class: "unique", Values: unique })
 
 ////////////////////////////////////////////////////////////
 
@@ -67,8 +82,10 @@ x = d3.time.scale().range([0, 800])
 y = d3.scale.linear().range([155, 0]) // reduce height with margin
 
 // this does not work yet
-x.domain(d3.extent(Data.map(function(d) { return d.Values }), function(d) { return d.Timestamp }))
-y.domain(d3.extent(Data.map(function(d) { return d.Values }), function(d) { return d.Count }))
+//x.domain(d3.extent(Data.map(function(d) { return d.Values }), function(d) { return d.Timestamp }))
+//y.domain(d3.extent(Data.map(function(d) { return d.Values }), function(d) { return d.Count }))
+x.domain([Data[0].Values[0].Timestamp, Data[0].Values[59].Timestamp])
+y.domain([0, 15])
 
 line = d3.svg.line()
 	.x(function(d) { return x(d.Timestamp) })
@@ -78,9 +95,11 @@ line = d3.svg.line()
 lines = svg.append("g")
 	.attr("class", "lines")
 
-legend = svg.append("g")
-	.attr("class", "legend")
-	.attr("transform", "translate(4, 195)")
+legend = svg.selectAll(".legend")
+  .data(Data)
+  .enter().append("g")
+    .attr("class", "legend")
+    .attr("transform", "translate(4, 197)")
 
 axis = d3.svg.axis()
 	.scale(x)
@@ -91,28 +110,18 @@ axis = d3.svg.axis()
 lines.selectAll("path.line")
 	.data(Data)
   .enter().append("path")
-	.attr("class", "line")
+	.attr("class", function(d) { return "line " + d.Class })
 	.attr("d", function(d) { return line(d.Values) })
 
 legend.append("circle")
-	.attr("class", "color total")
+	.attr("class", function(d) { return d.Class })
 	.attr("r", 4)
 	.attr("cy", -4)
-	.attr("cx", 0)
-
-legend.append("circle")
-	.attr("class", "color unique")
-	.attr("r", 4)
-	.attr("cy", -4)
-	.attr("cx", 90)
+	.attr("cx", function(_, i) { return i * 90 })
 
 legend.append("text")
-	.text("Page Views")
-	.attr("x", 10)
-
-legend.append("text")
-	.text("Unique Visitors")
-	.attr("x", 100)
+	.text(function(d) { return d.Name })
+	.attr("x", function(_, i) { return 10 + (i * 90) })
 
 svg.append("g")
 	.attr("class", "axis")
