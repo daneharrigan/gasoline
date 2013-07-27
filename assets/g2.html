@@ -73,7 +73,7 @@ for(var i=0;i<60; i++) {
 	var
   //n1 = (i % 2) ? 10 : 15
   n2 = (i % 2) ? 5 : 7
-  n3 = (i % 2) ? 7 : 5
+  n3 = (i % 2) ? 5 : 4
   n1 = n2 + n3
 
 	t.setSeconds(i)
@@ -131,11 +131,11 @@ legend.append("circle")
 	.attr("class", function(d) { return d.Class })
 	.attr("r", 4)
 	.attr("cy", -4)
-	.attr("cx", function(_, i) { return i * 90 })
+	.attr("cx", function(_, i) { return i * 100 })
 
 legend.append("text")
 	.text(function(d) { return d.Name })
-	.attr("x", function(_, i) { return 10 + (i * 90) })
+	.attr("x", function(_, i) { return 10 + (i * 100) })
 
 svg.append("g")
 	.attr("class", "axis")
