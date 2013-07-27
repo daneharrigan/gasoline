@@ -30,12 +30,20 @@ path.unique {
   stroke: #9e9;
 }
 
+path.returning {
+  stroke: #e99;
+}
+
 circle.total {
   fill: #99e;
 }
 
 circle.unique {
   fill: #9e9;
+}
+
+circle.returning {
+  fill: #e99;
 }
 
 g.axis line {
@@ -59,18 +67,24 @@ parse = d3.time.format.iso.parse
 
 total = []
 unique = []
+returning = []
+
 for(var i=0;i<60; i++) {
 	var
-  n = (i % 2) ? 10 : 15
+  //n1 = (i % 2) ? 10 : 15
   n2 = (i % 2) ? 5 : 7
+  n3 = (i % 2) ? 7 : 5
+  n1 = n2 + n3
 
 	t.setSeconds(i)
-	total.push({ Timestamp: parse(t.toISOString()), Count: n })
+	total.push({ Timestamp: parse(t.toISOString()), Count: n1 })
 	unique.push({ Timestamp: parse(t.toISOString()), Count: n2 })
+	returning.push({ Timestamp: parse(t.toISOString()), Count: n3 })
 }
 
 Data.push({ Name: "Page Views", Class: "total", Values: total })
-Data.push({ Name: "Uniqe Views", Class: "unique", Values: unique })
+Data.push({ Name: "Unique Visitors", Class: "unique", Values: unique })
+Data.push({ Name: "Returning Visitors", Class: "returning", Values: returning })
 
 ////////////////////////////////////////////////////////////
 
