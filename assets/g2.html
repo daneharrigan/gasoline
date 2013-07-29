@@ -1,59 +1,59 @@
 <!doctype html>
 <style>
-* {
-	margin: 0;
-	padding: 0;
-}
+	* {
+		margin: 0;
+		padding: 0;
+	}
 
-body {
-	padding: 40px;
-}
+	body {
+		padding: 40px;
+	}
 
-svg {
-	border: 1px solid #eee;
-}
+	svg {
+		border: 1px solid #eee;
+	}
 
-svg text {
-	font: 11px "Helvetica Neue", Helvetica;
-	fill: #ccc;
-}
+	svg text {
+		font: 11px "Helvetica Neue", Helvetica;
+		fill: #ccc;
+	}
 
-path.line {
-	fill: none;
-}
+	path.line {
+		fill: none;
+	}
 
-path.total {
-	stroke: #99e;
-}
+	path.total {
+		stroke: #99e;
+	}
 
-path.unique {
-  stroke: #9e9;
-}
+	path.unique {
+		stroke: #9e9;
+	}
 
-path.returning {
-  stroke: #e99;
-}
+	path.returning {
+		stroke: #e99;
+	}
 
-circle.total {
-  fill: #99e;
-}
+	circle.total {
+		fill: #99e;
+	}
 
-circle.unique {
-  fill: #9e9;
-}
+	circle.unique {
+		fill: #9e9;
+	}
 
-circle.returning {
-  fill: #e99;
-}
+	circle.returning {
+		fill: #e99;
+	}
 
-g.axis line {
-	stroke: rgba(0, 0, 0, .05);
-	stroke-width: 1px;
-}
+	g.axis line {
+		stroke: rgba(0, 0, 0, .05);
+		stroke-width: 1px;
+	}
 
-g.legend circle.total {
-	fill: #aae;
-}
+	g.legend circle.total {
+		fill: #aae;
+	}
 </style>
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
@@ -71,10 +71,9 @@ returning = []
 
 for(var i=0;i<60; i++) {
 	var
-  //n1 = (i % 2) ? 10 : 15
-  n2 = (i % 2) ? 5 : 7
-  n3 = (i % 2) ? 5 : 4
-  n1 = n2 + n3
+	n2 = (i % 2) ? 5 : 7
+	n3 = (i % 2) ? 5 : 4
+	n1 = n2 + n3
 
 	t.setSeconds(i)
 	total.push({ Timestamp: parse(t.toISOString()), Count: n1 })
@@ -88,57 +87,80 @@ Data.push({ Name: "Returning Visitors", Class: "returning", Values: returning })
 
 ////////////////////////////////////////////////////////////
 
-svg = d3.select("body").append("svg")
-	.attr("width", 800)
-	.attr("height", 200)
+function Graph(q, options) {
+	var
+	width = options.width,
+	height = options.height,
+	data = options.data,
+	xMax = width,
+	yMax = height - 45,
+	lIndent = 4,
+	lHeight = height - 3,
+	tHeight = -(height - 40),
+	aHeight = height - 40
 
-x = d3.time.scale().range([0, 800])
-y = d3.scale.linear().range([155, 0]) // reduce height with margin
+	var
+	svg = d3.select("body").append("svg")
+		.attr("width", width)
+		.attr("height", height)
 
-// this does not work yet
-//x.domain(d3.extent(Data.map(function(d) { return d.Values }), function(d) { return d.Timestamp }))
-//y.domain(d3.extent(Data.map(function(d) { return d.Values }), function(d) { return d.Count }))
-x.domain([Data[0].Values[0].Timestamp, Data[0].Values[59].Timestamp])
-y.domain([0, 15])
+	var
+	x = d3.time.scale().range([0, xMax]),
+	y = d3.scale.linear().range([yMax, 0])
 
-line = d3.svg.line()
-	.x(function(d) { return x(d.Timestamp) })
-	.y(function(d) { return y(d.Count) })
-	.interpolate("monotone")
+	var
+	line = d3.svg.line()
+		.x(function(d) { return x(d.Timestamp) })
+		.y(function(d) { return y(d.Count) })
+		.interpolate("monotone")
 
-lines = svg.append("g")
-	.attr("class", "lines")
+	var
+	lines = svg.append("g")
+		.attr("class", "lines")
 
-legend = svg.selectAll(".legend")
-  .data(Data)
-  .enter().append("g")
-    .attr("class", "legend")
-    .attr("transform", "translate(4, 197)")
+	var
+	legend = svg.selectAll(".legend")
+		.data(data)
+		.enter().append("g")
+			.attr("class", "legend")
+			.attr("transform", "translate(" + lIndent + "," + lHeight + ")")
 
-axis = d3.svg.axis()
-	.scale(x)
-	.orient("bottom")
-	.ticks(10)
-	.tickSize(-160, 0, 0)
+	var
+	axis = d3.svg.axis()
+		.scale(x)
+		.orient("bottom")
+		.ticks(10)
+		.tickSize(tHeight, 0, 0)
 
-lines.selectAll("path.line")
-	.data(Data)
-  .enter().append("path")
-	.attr("class", function(d) { return "line " + d.Class })
-	.attr("d", function(d) { return line(d.Values) })
+	x.domain([data[0].Values[0].Timestamp, data[0].Values[59].Timestamp])
+	y.domain([0, 15])
 
-legend.append("circle")
-	.attr("class", function(d) { return d.Class })
-	.attr("r", 4)
-	.attr("cy", -4)
-	.attr("cx", function(_, i) { return i * 100 })
+	lines.selectAll("path.line")
+		.data(data)
+	  .enter().append("path")
+		.attr("class", function(d) { return "line " + d.Class })
+		.attr("d", function(d) { return line(d.Values) })
 
-legend.append("text")
-	.text(function(d) { return d.Name })
-	.attr("x", function(_, i) { return 10 + (i * 100) })
+	legend.append("circle")
+		.attr("class", function(d) { return d.Class })
+		.attr("r", 4)
+		.attr("cy", -4)
+		.attr("cx", function(_, i) { return i * 100 })
 
-svg.append("g")
-	.attr("class", "axis")
-	.attr("transform", "translate(0, 160)")
-	.call(axis)
+	legend.append("text")
+		.text(function(d) { return d.Name })
+		.attr("x", function(_, i) { return 10 + (i * 100) })
+
+	svg.append("g")
+		.attr("class", "axis")
+		.attr("transform", "translate(0," + aHeight + ")")
+		.call(axis)
+}
+
+new Graph("body", {
+	width: 800,
+	height: 200,
+	data: Data,
+	update: true
+})
 </script>
