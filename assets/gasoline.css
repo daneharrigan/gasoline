@@ -98,41 +98,41 @@ h1 {
 	border-bottom: 1px solid #eee;
 }
 
-#live path, line {
-	fill: none;
+svg.lines text {
+	font: 11px "Helvetica Neue", Helvetica;
+	fill: #ccc;
 }
 
-#live .line {
+svg.lines g.axis line {
+	stroke: rgba(0, 0, 0, .05);
 	stroke-width: 1px;
 }
 
-#live .total {
+svg.lines path.line {
+	fill: none;
+	stroke-width: 1px;
+}
+
+path.total {
 	stroke: #00aae3;
 }
 
-#live .unique {
+path.unique {
 	stroke: #00e3e3;
 }
 
-#live .returning {
+path.returning {
 	stroke: #aaaae3;
 }
 
-#live .axis path,
-#live .axis line {
-	display: none;
+circle.total {
+	fill: #00aae3;
 }
 
-#live .tick line {
-	display: block;
-	fill: none;
-	stroke: rgba(0, 0, 0, .05);
-	shape-rendering: crispEdges;
+circle.unique {
+	fill: #00e3e3;
 }
 
-#live .tick text {
-	font: 11px "Helvetica Neue", Helvetica, Arial, sans-serif;
-	fill: #ccc;
-	position: relative;
-	top: 5px;
+circle.returning {
+	fill: #aaaae3;
 }

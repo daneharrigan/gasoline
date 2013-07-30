@@ -24,14 +24,14 @@ document.addEventListener("DOMContentLoaded", function(){
 		time.setSeconds(time.getSeconds() - 1)
 
 		var d = time.toISOString()
-		total.unshift({ Timestamp: d, Value: 15 })
-		unique.unshift({ Timestamp: d, Value: 5 })
-		returning.unshift({ Timestamp: d, Value: 10 })
+		total.unshift({ Timestamp: d, Count: 15 })
+		unique.unshift({ Timestamp: d, Count: 5 })
+		returning.unshift({ Timestamp: d, Count: 10 })
 	}
 
-	Gasoline.DB.Lines.push({ Name: "total", Value: total })
-	Gasoline.DB.Lines.push({ Name: "unique", Value: unique })
-	Gasoline.DB.Lines.push({ Name: "returning", Value: returning })
+	Gasoline.DB.Lines.push({ Name: "Page Views", Class: "total", Values: total })
+	Gasoline.DB.Lines.push({ Name: "Unique Visitors", Class: "unique", Values: unique })
+	Gasoline.DB.Lines.push({ Name: "Returning Visitors", Class: "returning", Values: returning })
 
 	function appendDate() {
 		var d = new Date
@@ -39,9 +39,9 @@ document.addEventListener("DOMContentLoaded", function(){
 		d.setMilliseconds(0)
 		var s = d.toISOString()
 
-		Gasoline.DB.Lines[0].Value.push({ Timestamp: s, Value: 10 })
-		Gasoline.DB.Lines[1].Value.push({ Timestamp: s, Value: 7 })
-		Gasoline.DB.Lines[2].Value.push({ Timestamp: s, Value: 3 })
+		Gasoline.DB.Lines[0].Values.push({ Timestamp: s, Count: 10 })
+		Gasoline.DB.Lines[1].Values.push({ Timestamp: s, Count: 7 })
+		Gasoline.DB.Lines[2].Values.push({ Timestamp: s, Count: 3 })
 
 		setTimeout(appendDate, 1000)
 	}

@@ -1,58 +1,7 @@
 Gasoline = {}
 Gasoline.DB = {}
-Gasoline.Graph = function(p, options) {
-	var
-	data	 = options.data,
-	width	= options.width,
-	height = options.height,
-	margin = options.margin || 0,
-	parse	= d3.time.format.iso.parse
-
-	var
-	x = d3.time.scale().range([0, width]),
-	y = d3.scale.linear().range([height + margin, margin]),
-	stack = d3.layout.stack().offset("wiggle")
-
-	var
-	line = d3.svg.line()
-		.x(function(d) { return x(parse(d.Timestamp)) })
-		.y(function(d) { return y(d.Value) })
-		.interpolate("monotone")
-
-	var
-	svg = d3.select(p).append("svg")
-		.attr("width", width)
-		.attr("height", height + margin)
-
-	var
-	axis = d3.svg.axis()
-		.scale(x)
-		.orient("bottom")
-		.ticks(10)
-		.tickSize(-height, 0, 0)
-
-	var
-  legend = svg.selectAll(".legend")
-  .data(data)
-  .enter().append("g")
-    .attr("class", "legend")
-    .attr("transform", function(d, i) { return "translate(" + 20 * i + ", 0)"; });
-
-	legend.append("circle")
-		.attr("cx", width - 200)
-    .attr("cy", height + margin)
-    .attr("r", 4)
-		//.style("fill", color);
-
-  /*
-	legend.append("text")
-		.attr("x", width - 24)
-		.attr("y", 9)
-		.attr("dy", ".35em")
-		.style("text-anchor", "end")
-		.text(function(d) { return d; });
-  */
-
+Gasoline.Graph = function(q, options) {
+	var parse = d3.time.format.iso.parse
 
 	function domains() {
 		var
@@ -63,10 +12,10 @@ Gasoline.Graph = function(p, options) {
 
 		for(var i=0; i<data.length; i++) {
 			var
-			n = data[i].Value.length - 1,
-			xMin = parse(data[i].Value[n].Timestamp),
-			xMax = parse(data[i].Value[0].Timestamp),
-			yMax = data[i].Value[0].Value
+			n = data[i].Values.length - 1,
+			xMin = parse(data[i].Values[n].Timestamp),
+			xMax = parse(data[i].Values[0].Timestamp),
+			yMax = data[i].Values[0].Count
 
 			if(!dxMin || !dxMax) {
 				dxMin = xMin
@@ -90,36 +39,17 @@ Gasoline.Graph = function(p, options) {
 		y.domain([dyMin, dyMax])
 	}
 
-	// add lines
-	domains()
-	svg.selectAll("path.line")
-		.data(data)
-		.enter().append("path")
-		.attr("class", function(d) { return d.Name + " line" })
-		.attr("d", function(d) { return line(d.Value) })
-
-	svg.append("g")
-		.attr("class", "x axis")
-		.attr("transform", "translate(0," + height + ")")
-		.call(axis)
-
-	// animate
 	function update() {
-		/* if a chrome tab is not in focus the rendering stacks and
-		 * the graph looks very wrong. remove any item that is older
-		 * than 60 seconds
-		 */
-
 		for(var i=0; i<data.length; i++) {
-			while(data[i].Value.length > 60) {
-				data[i].Value.shift()
+			while(data[i].Values.length > 60) {
+				data[i].Values.shift()
 			}
 		}
 
 		domains()
 		d3.selectAll("path.line").transition()
 			.duration(1000)
-			.attr("d", function(d) { return line(d.Value) })
+			.attr("d", function(d) { return line(d.Values) })
 
 		d3.select("g.axis").transition()
 			.duration(1000)
@@ -127,6 +57,73 @@ Gasoline.Graph = function(p, options) {
 
 		setTimeout(update, 1000)
 	}
+
+	var
+	width = options.width,
+	height = options.height,
+	data = options.data,
+	xMax = width,
+	yMax = height - 45,
+	lIndent = 4,
+	lHeight = height - 3,
+	tHeight = -(height - 40),
+	aHeight = height - 40
+
+	var
+	svg = d3.select(q).append("svg")
+		.attr("width", width)
+		.attr("height", height)
+		.attr("class", "lines")
+
+	var
+	x = d3.time.scale().range([0, xMax]),
+	y = d3.scale.linear().range([yMax, 0])
+
+	var
+	line = d3.svg.line()
+		.x(function(d) { return x(parse(d.Timestamp)) })
+		.y(function(d) { return y(d.Count) })
+		.interpolate("monotone")
+
+	var
+	lines = svg.append("g")
+		.attr("class", "lines")
+
+	var
+	legend = svg.selectAll(".legend")
+		.data(data)
+		.enter().append("g")
+			.attr("class", "legend")
+			.attr("transform", "translate(" + lIndent + "," + lHeight + ")")
+
+	var
+	axis = d3.svg.axis()
+		.scale(x)
+		.orient("bottom")
+		.ticks(10)
+		.tickSize(tHeight, 0, 0)
+
+	domains()
+	lines.selectAll("path.line")
+		.data(data)
+	  .enter().append("path")
+		.attr("class", function(d) { return "line " + d.Class })
+		.attr("d", function(d) { return line(d.Values) })
+
+	legend.append("circle")
+		.attr("class", function(d) { return d.Class })
+		.attr("r", 4)
+		.attr("cy", -4)
+		.attr("cx", function(_, i) { return i * 100 })
+
+	legend.append("text")
+		.text(function(d) { return d.Name })
+		.attr("x", function(_, i) { return 10 + (i * 100) })
+
+	svg.append("g")
+		.attr("class", "axis")
+		.attr("transform", "translate(0," + aHeight + ")")
+		.call(axis)
 
 	if(options.update) {
 		update()
