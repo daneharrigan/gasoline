@@ -40,6 +40,7 @@ Gasoline.Graph = function(q, options) {
 	}
 
 	function update() {
+		console.log("at=update fn=Graph")
 		for(var i=0; i<data.length; i++) {
 			while(data[i].Values.length > 60) {
 				data[i].Values.shift()
@@ -47,7 +48,9 @@ Gasoline.Graph = function(q, options) {
 		}
 
 		domains()
-		d3.selectAll("path.line").transition()
+		d3.selectAll("path.line")
+			.data(data)
+			.transition()
 			.duration(1000)
 			.attr("d", function(d) { return line(d.Values) })
 
@@ -134,8 +137,13 @@ Gasoline.Value = function(p, options) {
 	var el = document.querySelector(p)
 
 	function update() {
-		if(!el.innerText || options.value != el.innerText) {
-			el.innerText = options.value
+		var v = options.value
+		if(typeof options.value == "function") {
+			v = v()
+		}
+		console.log("at=update fn=Value")
+		if(!el.innerText || v != el.innerText) {
+			el.innerText = v
 		}
 
 		if(options.update) {
@@ -146,7 +154,7 @@ Gasoline.Value = function(p, options) {
 	update()
 }
 
-Gasoline.format = {
+Gasoline.fmt = {
 	number: function(n) {
 		var
 		s = n.toString(),

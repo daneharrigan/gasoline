@@ -6,15 +6,30 @@
 document.addEventListener("DOMContentLoaded", function(){
 	Gasoline.DB.Lines = []
 
-	Gasoline.DB.PageViews = Gasoline.format.number(0)
-	Gasoline.DB.UniqueVisitors = Gasoline.format.number(0)
-	Gasoline.DB.ReturningVisitors = Gasoline.format.number(0)
-	Gasoline.DB.Visits = Gasoline.format.number(0)
+	Gasoline.DB.PageViews = Gasoline.fmt.number(0)
+	Gasoline.DB.UniqueVisitors = Gasoline.fmt.number(0)
+	Gasoline.DB.ReturningVisitors = Gasoline.fmt.number(0)
+	Gasoline.DB.Visits = Gasoline.fmt.number(0)
 
-	new Gasoline.Value("#page-views",{ value: Gasoline.DB.PageViews, update: true })
-	new Gasoline.Value("#unique-visitors", { value: Gasoline.DB.UniqueVisitors, update: true })
-	new Gasoline.Value("#returning-visitors", { value: Gasoline.DB.ReturningVisitors, update: true })
-	new Gasoline.Value("#visits", { value: Gasoline.DB.Visits, update: true })
+	new Gasoline.Value("#page-views",{
+		value: function() { return Gasoline.fmt.number(Gasoline.DB.PageViews) },
+		update: true
+	})
+
+	new Gasoline.Value("#unique-visitors", {
+		value: function() { return Gasoline.fmt.number(Gasoline.DB.UniqueVisitors) },
+		update: true
+	})
+
+	new Gasoline.Value("#returning-visitors", {
+		value: function() { return Gasoline.fmt.number(Gasoline.DB.ReturningVisitors) },
+		update: true
+	})
+
+	new Gasoline.Value("#visits", {
+		value: function() { return Gasoline.fmt.number(Gasoline.DB.Visits) },
+		update: true
+	})
 
 	var
 	c = document.querySelector("#content"),
@@ -31,27 +46,29 @@ document.addEventListener("DOMContentLoaded", function(){
 	})
 
 	var source = new EventSource("/stream?i=ebe7b2084a8d0cb0")
-
 	source.addEventListener("update", handleSteam, false)
 	//source.addEventListener("error", handleError)
 
 	function handleSteam(event) {
 		var data = JSON.parse(event.data)
 		for(var k in data) {
-			console.debug(data)
 			var value = data[k]
 			switch(k) {
 			case "PageView":
-				Gasoline.DB.PageViews = Gasoline.format.number(value)
+				console.log("at=PageView fn=handleSteam")
+				Gasoline.DB.PageViews = value
 				break
 			case "Visit":
-				Gasoline.DB.Visits = Gasoline.format.number(value)
+				console.log("at=Visit fn=handleSteam")
+				Gasoline.DB.Visits = value
 				break
 			case "UniqueVisitor":
-				Gasoline.DB.UniqueVisitors = Gasoline.format.number(value)
+				console.log("at=UniqueVisitor fn=handleSteam")
+				Gasoline.DB.UniqueVisitors = value
 				break
 			case "ReturnVisitor":
-				Gasoline.DB.ReturnVisitors = Gasoline.format.number(value)
+				console.log("at=ReturnVisitor fn=handleSteam")
+				Gasoline.DB.ReturnVisitors = value
 				break
 			case "TopView":
 				/*
