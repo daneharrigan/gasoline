@@ -17,6 +17,12 @@ The project tracks the following user data:
 * View Durations: the length of time a user spent on a web page broken down by p50, p95 and p99
 * Browser Usage: the count of the browsers and their versions used to view the web page
 
+Incomplete Features:
+
+* Graphing incoming requests with d3
+* Display browser/version data. It's already captured
+* Toggle between multiple accounts
+
 ## Endpoints
 
 A list of all endpoints used in the project
