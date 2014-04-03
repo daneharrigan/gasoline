@@ -72,8 +72,8 @@ $ foreman start
 GitHub repository access is required for the following steps:
 
 ```bash
-$ git clone git@github.com:daneharrigan/gasoline.git
-$ cd gasoline
+$ go get github.com:daneharrigan/gasoline
+$ cd $GOPATH/src/github.com/daneharrigan/gasoline
 $ heroku create --buildpack https://github.com/kr/heroku-buildpack-go.git
 $ git push heroku master
 ```
