@@ -76,16 +76,5 @@ $ heroku create --buildpack https://github.com/kr/heroku-buildpack-go.git
 $ git push heroku master
 ```
 
-## Similar Products
-
-* [Google Analytics][1]
-* [Mint Analytics][2]
-* [Gaug.es][3]
-* [Adobe Analytics][4]
-* [ClickTale][5]
-
-[1]: http://analytics.google.com
-[2]: http://haveamint.com
-[3]: http://get.gaug.es
-[4]: http://adobe.com/solutions/digital-analytics.html
-[5]: http://clicktale.com
+* Dashboard: Open your browser to your new app's path `/dashboard`
+* Client Example: Open your browser to your new app's path `/example`
