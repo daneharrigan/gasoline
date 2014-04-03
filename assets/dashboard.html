@@ -71,30 +71,19 @@ document.addEventListener("DOMContentLoaded", function(){
 				Gasoline.DB.ReturnVisitors = value
 				break
 			case "TopView":
-				/*
-				for(var i=0; value.length > i; i++) {
-					var v = value[i].Value.split("|"),
-					    t = v.shift() + "\n"
-					value[i].Value = t + v.join("|")
-				}
-				updateList("#top-view", value)
-				*/
+        Gasoline.List("#frequented-pages ol", value)
 				break
 			case "Features":
-				//updateList("#features", value)
+        Gasoline.List("#features ol", value)
 				break
 			case "Resolutions":
-				//updateList("#resolutions", value)
+        Gasoline.List("#resolutions ol", value)
 				break
 			case "OS":
-				//updateList("#os", value)
+        Gasoline.List("#operating-systems ol", value)
 				break
 			case "BrowserUsage":
-				/*
-				for(var k in value) {
-					updateList("#browser-" + k, value[k])
-				}
-				*/
+        Gasoline.GroupList("#browser-types ol", value)
 			}
 		}
 	}
@@ -103,7 +92,7 @@ document.addEventListener("DOMContentLoaded", function(){
 <header>
 	<hgroup>
 		<h1>gasoline</h1>
-		<h2>dane.heroku.com</h2>
+		<h2>your.example.com</h2>
 	</hgroup>
 </header>
 <section id="content">
@@ -125,81 +114,30 @@ document.addEventListener("DOMContentLoaded", function(){
 				<h3>Visits</h3>
 				<span id="visits">980,000</span>
 			</li>
-			<li id="frequented-pages">
+			<li id="frequented-pages" class="list">
 				<h3>Frequented Pages</h3>
-				<ol>
-					<li>
-						<p>home page title | dane.heroku.com</p>
-						<p>/</p>
-						<span>50,000</span>
-					</li>
-					<li>
-						<p>foo bar baz article | dane.heroku.com</p>
-						<p>/blog/foo-bar-baz</p>
-						<span>10,000</span>
-					</li>
-					<li>
-						<p>contact | dane.heroku.com</p>
-						<p>/contact</p>
-						<span>5,000</span>
-					</li>
-				<ol>
+				<ol></ol>
 			</li>
 		</ul>
 	</aside>
 	<section id="live"></section>
+  <section id="browsers" class="list">
+    <div id="features">
+      <h3>Technologies</h3>
+      <ol></ol>
+    </div> 
+    <div id="browser-types">
+      <h3>Browsers</h3>
+      <ol></ol>
+    </div> 
+    <div id="resolutions">
+      <h3>Resolutions</h3>
+      <ol></ol>
+    </div> 
+    <div id="operating-systems">
+      <h3>OS</h3>
+      <ol></ol>
+    </div> 
+  </section>
 	<hr>
 </section>
-<!-- <footer>footer</footer> -->
-<!--
-<ul>
-	<li id="page-view">
-		<strong>Page Views:</strong>
-		<span class="value"></span>
-	</li>
-
-	<li id="visit">
-		<strong>Visits:</strong>
-		<span class="value"></span>
-	</li>
-
-	<li id="unique-visitor">
-		<strong>Unique Visitors:</strong>
-		<span class="value"></span>
-	</li>
-
-	<li id="return-visitor">
-		<strong>Returning Visitors:</strong>
-		<span class="value"></span>
-	</li>
-</ul>
-
-<hr>
-
-<ul id="top-view"></ul>
-
-<hr>
-
-<ul id="features"></ul>
-
-<hr>
-
-<ul id="resolutions"></ul>
-
-<hr>
-
-<ul id="os"></ul>
-
-<hr>
-
-<dl>
-	<dt>Chrome</dt>
-	<dd><ul id="browser-Chrome"></ul></dd>
-	<dt>Safari</dt>
-	<dd><ul id="browser-Safari"></ul></dd>
-	<dt>Firefox</dt>
-	<dd><ul id="browser-Firefox"></ul></dd>
-	<dt>MSIE</dt>
-	<dd><ul id="browser-MSIE"></ul></dd>
-</dl>
--->

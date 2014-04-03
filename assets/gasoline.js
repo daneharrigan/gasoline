@@ -154,6 +154,62 @@ Gasoline.Value = function(p, options) {
 	update()
 }
 
+Gasoline.List = function(q, collection) {
+  if(!collection) {
+    return
+  }
+
+  collection.sort(function(a, b){
+    if(a.Value > b.Value) {
+      return 1
+    } else if(a.Value < b.Value) {
+      return -1
+    } else {
+      return 0
+    }
+  })
+
+  var el = document.querySelector(q),
+      li = el.querySelectorAll("li")
+
+  for(var i=0; i<collection.length; i++) {
+    var label = collection[i].Value.split("|")[0],
+        value = collection[i].Count,
+        pLabel, pValue
+
+    if(li[i]) {
+      pLabel   = li[i].querySelector(".label")
+      pValue = li[i].querySelector(".value")
+    } else {
+      var l = document.createElement("li")
+          pLabel = document.createElement("p"),
+          pValue = document.createElement("p")
+
+      pLabel.setAttribute("class", "label")
+      pValue.setAttribute("class", "value")
+
+      l.appendChild(pLabel)
+      l.appendChild(pValue)
+      el.appendChild(l)
+    }
+
+    if(pLabel.innerText != label) {
+      pLabel.innerText = label
+    }
+
+    pValue.innerText = value
+  }
+}
+
+Gasoline.GroupList = function(q, group) {
+  if(!group) {
+    return
+  }
+
+  var el = document.querySelector(q)
+  // how should you display browser version data?
+}
+
 Gasoline.fmt = {
 	number: function(n) {
 		var

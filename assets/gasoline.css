@@ -89,8 +89,14 @@ h1 {
 	font-size: 12px;
 }
 
-#left #frequented-pages span {
-	font-size: 18px;
+.list p.value {
+	font-size: 24px;
+	color: #00aae3;
+}
+
+.list li {
+	list-style: none;
+	padding: 10px 0;
 }
 
 #live {
@@ -135,4 +141,16 @@ circle.unique {
 
 circle.returning {
 	fill: #aaaae3;
+}
+
+#browsers div {
+	float: left;
+	width: 190px;
+}
+
+#browsers h3 {
+	font-size: 14px;
+	font-weight: bold;
+	-webkit-font-smoothing: antialiased;
+	margin-bottom: 5px;
 }
