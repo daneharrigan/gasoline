@@ -1,5 +1,7 @@
 # gasoline
 
+![Gasoline Dashboard](http://cl.ly/image/3l190U3Q3q0r/content)
+
 The project tracks the following user data:
 
 * Page Views: when a user reaches a web page
