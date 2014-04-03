@@ -1,7 +1,7 @@
 package db
 
 import (
-	"gasoline/sum"
+	"github.com/daneharrigan/gasoline/sum"
 	"github.com/daneharrigan/perks/quantile"
 	"github.com/daneharrigan/perks/topk"
 	"sync"
